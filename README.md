@@ -1,0 +1,2 @@
+# Simplylaw
+A law blog
