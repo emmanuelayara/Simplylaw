@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>{{ post.title }}</h2>
+<p class="text-muted">By {{ post.author }} on {{ post.date_posted.strftime('%Y-%m-%d') }}</p>
+<p>{{ post.content }}</p>
+
+<hr>
+<h4>Comments</h4>
+{% for comment in comments %}
+  <div class="mb-3">
+    <strong>{{ comment.name }}</strong> said:<br>
+    <p>{{ comment.content }}</p>
+  </div>
+{% else %}
+  <p>No comments yet.</p>
+{% endfor %}
+
+<h5>Leave a Comment</h5>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">{{ form.name.label }} {{ form.name(class="form-control") }}</div>
+    <div class="mb-3">{{ form.email.label }} {{ form.email(class="form-control") }}</div>
+    <div class="mb-3">{{ form.content.label }} {{ form.content(class="form-control") }}</div>
+    <button type="submit" class="btn btn-success">Post Comment</button>
+</form>
+{% endblock %}
