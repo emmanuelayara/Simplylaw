@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block content %}
+<h2>Published Articles</h2>
+{% for article in articles %}
+  <div class="card mb-3">
+    <div class="card-header">{{ article.title }} by {{ article.author_name }}</div>
+    <div class="card-body">{{ article.content }}</div>
+  </div>
+{% else %}
+  <p>No approved articles yet.</p>
+{% endfor %}
+{% endblock %}
