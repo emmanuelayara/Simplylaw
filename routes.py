@@ -19,17 +19,18 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    
-    return render_template('home.html')
+    articles = Article.query.filter_by(approved=True).order_by(Article.id.desc()).all()
+    return render_template('home.html', articles=articles)
 
-
-@app.route('/approve/<int:article_id>')
+@app.route('/admin/approve/<int:article_id>')
+@login_required
 def approve_article(article_id):
     article = Article.query.get_or_404(article_id)
     article.is_approved = True
     db.session.commit()
     flash('Article approved.', 'success')
     return redirect(url_for('admin_dashboard'))
+
 
 @app.route('/disapprove/<int:article_id>')
 def disapprove_article(article_id):

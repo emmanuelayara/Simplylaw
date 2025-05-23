@@ -73,16 +73,17 @@ footer a:hover {
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('submit_article') }}">Submit Article</a></li>
 
                     {% if current_user.is_authenticated and current_user.is_admin %}
+                        <span class="navbar-text nav-link">Welcome, {{ current_user.username }}!</span>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_logout') }}">Logout</a></li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_login') }}">Login</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ url_for('register_admin') }}">Register Admin</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('submit_article') }}">Submit Article</a></li>
                     {% endif %}
                 </ul>
             </div>
