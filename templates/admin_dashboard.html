@@ -1,15 +1,34 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h2>Pending Articles</h2>
+<h2 class="mb-4">Pending Articles</h2>
+
 {% for article in articles %}
-  <div class="card mb-3">
-    <div class="card-header">
-      <strong>{{ article.title }}</strong> by {{ article.author_name }}
-      <a href="{{ url_for('approve_article', article_id=article.id) }}" class="btn btn-sm btn-success float-end">Approve</a>
+  <div class="card mb-4 shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div>
+        <strong>
+          <a href="{{ url_for('view_article', article_id=article.id) }}">
+            {{ article.title }}
+          </a>
+        </strong>
+        <br>
+        <small>by {{ article.author }}</small>
+      </div>
+      <div>
+        <a href="{{ url_for('approve_article', article_id=article.id) }}" class="btn btn-sm btn-success">Approve</a>
+        <a href="{{ url_for('disapprove_article', article_id=article.id) }}" class="btn btn-sm btn-danger">Disapprove</a>
+      </div>
     </div>
-    <div class="card-body">{{ article.content }}</div>
+    <div class="card-body">
+      {{ article.content[:250] }}...  <!-- show preview only -->
+      <div class="mt-2">
+        <a href="{{ url_for('view_article', article_id=article.id) }}" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+      </div>
+    </div>
   </div>
 {% else %}
   <p>No pending articles.</p>
 {% endfor %}
+
 {% endblock %}
+

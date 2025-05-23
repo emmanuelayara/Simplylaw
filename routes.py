@@ -7,7 +7,9 @@ from forms import LoginForm, ArticleSubmissionForm, AdminRegisterForm, ContactFo
 from models import Message
 from models import User, Article
 from werkzeug.security import generate_password_hash
-
+from flask import request, redirect, url_for, flash, render_template
+from werkzeug.utils import secure_filename
+import os
 from flask import render_template
 from main import app
 
@@ -20,22 +22,67 @@ def home():
     
     return render_template('home.html')
 
+
+@app.route('/approve/<int:article_id>')
+def approve_article(article_id):
+    article = Article.query.get_or_404(article_id)
+    article.is_approved = True
+    db.session.commit()
+    flash('Article approved.', 'success')
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/disapprove/<int:article_id>')
+def disapprove_article(article_id):
+    article = Article.query.get_or_404(article_id)
+    db.session.delete(article)
+    db.session.commit()
+    flash('Article disapproved and deleted.', 'danger')
+    return redirect(url_for('admin_dashboard'))
+
+
+
+@app.route('/article/<int:article_id>')
+def view_article(article_id):
+    article = Article.query.get_or_404(article_id)
+    return render_template('view_article.html', article=article)
+
+
+
 @app.route('/submit', methods=['GET', 'POST'])
 def submit_article():
     form = ArticleSubmissionForm()
+    
     if form.validate_on_submit():
+        # Handle image upload
+        image = request.files.get('image')
+        image_filename = None
+        if image and image.filename:
+            image_filename = secure_filename(image.filename)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+
+        # Handle document upload
+        document = request.files.get('document')
+        document_filename = None
+        if document and document.filename:
+            document_filename = secure_filename(document.filename)
+            document.save(os.path.join(app.config['UPLOAD_FOLDER'], document_filename))
+
+        # Create article object
         article = Article(
             author=form.author.data,
             email=form.email.data,
             title=form.title.data,
-            content=form.content.data
+            content=form.content.data,
+            image_filename=image_filename,             # Optional: ensure this exists in your model
+            document_filename=document_filename        # Optional: ensure this exists in your model
         )
+        
         db.session.add(article)
         db.session.commit()
         flash('Article submitted successfully and is awaiting approval.', 'success')
         return redirect(url_for('home'))
-    return render_template('submit_article.html', form=form)
 
+    return render_template('submit_article.html', form=form)
 
 
 @app.route('/admin/register', methods=['GET', 'POST'])
@@ -83,17 +130,7 @@ def admin_dashboard():
     pending = Article.query.filter_by(status='pending').all()
     return render_template('admin_dashboard.html', articles=pending)
 
-@app.route('/admin/approve/<int:article_id>')
-@login_required
-def approve_article(article_id):
-    if not current_user.is_admin:
-        flash('Access denied.', 'danger')
-        return redirect(url_for('home'))
-    article = Article.query.get_or_404(article_id)
-    article.status = 'approved'
-    db.session.commit()
-    flash('Article approved.', 'success')
-    return redirect(url_for('admin_dashboard'))
+
 
 @app.route('/admin/logout')
 @login_required

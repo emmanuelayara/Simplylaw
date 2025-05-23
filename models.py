@@ -26,6 +26,9 @@ class Article(db.Model):
     comments = db.relationship('Comment', backref='article', lazy=True)
     status = db.Column(db.String(20), nullable=False, default='pending')
     date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
+    image_filename = db.Column(db.String(120), nullable=True)
+    document_filename = db.Column(db.String(120), nullable=True)
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

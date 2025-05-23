@@ -1,12 +1,52 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h2>Submit an Article</h2>
-<form method="POST">
-  {{ form.hidden_tag() }}
-  <div class="mb-3">{{ form.author.label }} {{ form.author(class="form-control") }}</div>
-  <div class="mb-3">{{ form.email.label }} {{ form.email(class="form-control") }}</div>
-  <div class="mb-3">{{ form.title.label }} {{ form.title(class="form-control") }}</div>
-  <div class="mb-3">{{ form.content.label }} {{ form.content(class="form-control", rows="10") }}</div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+
+<div class="container mt-5 mb-5" style="max-width: 700px;">
+  <div class="card shadow-lg border-0 rounded">
+    <div class="card-body p-4">
+      <h2 class="text-center mb-4" style="color: #2c3e50;">📝 Submit an Article</h2>
+
+      <form method="POST" enctype="multipart/form-data">
+
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+          <label for="author" class="form-label fw-bold">{{ form.author.label }}</label>
+          {{ form.author(class="form-control", placeholder="Enter your full name") }}
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label fw-bold">{{ form.email.label }}</label>
+          {{ form.email(class="form-control", placeholder="Enter your email address") }}
+        </div>
+
+        <div class="mb-3">
+          <label for="title" class="form-label fw-bold">{{ form.title.label }}</label>
+          {{ form.title(class="form-control", placeholder="Title of your article") }}
+        </div>
+
+        <div class="mb-3">
+          <label for="content" class="form-label fw-bold">{{ form.content.label }}</label>
+          {{ form.content(class="form-control", rows="10", placeholder="Write your article here...") }}
+        </div>
+
+        <div class="mb-3">
+          <label for="image" class="form-label fw-bold">Upload Image (optional)</label>
+          <input type="file" name="image" class="form-control" accept="image/*">
+        </div>
+
+        <div class="mb-3">
+          <label for="document" class="form-label fw-bold">Upload Document (optional, PDF/Word)</label>
+          <input type="file" name="document" class="form-control" accept=".pdf,.doc,.docx">
+        </div>
+
+        <div class="d-grid mt-4">
+          <button type="submit" class="btn btn-primary btn-lg">📤 Submit Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
+
