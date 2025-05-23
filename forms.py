@@ -36,4 +36,5 @@ class ArticleSubmissionForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     author = StringField('Author', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired()])
     submit = SubmitField('Submit')

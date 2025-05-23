@@ -25,7 +25,8 @@ def submit_article():
     form = ArticleSubmissionForm()
     if form.validate_on_submit():
         article = Article(
-            author_name=form.author_name.data,
+            author=form.author.data,
+            email=form.email.data,
             title=form.title.data,
             content=form.content.data
         )
