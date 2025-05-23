@@ -47,12 +47,18 @@ def register_admin():
             return redirect(url_for('register_admin'))
         
         hashed_password = generate_password_hash(form.password.data)
-        new_admin = User(username=form.username.data, password=hashed_password, is_admin=True)
+        new_admin = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=hashed_password,
+            is_admin=True
+        )
         db.session.add(new_admin)
         db.session.commit()
         flash("Admin registered successfully!", "success")
         return redirect(url_for('admin_login'))
     return render_template('admin_register.html', form=form)
+
 
 
 @app.route('/admin/login', methods=['GET', 'POST'])

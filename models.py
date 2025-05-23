@@ -9,6 +9,11 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
+    email = db.Column(db.String(100), nullable=False)
+    __table_args__ = (
+        db.UniqueConstraint('email', name='uq_user_email'),
+    )
+
 
 
 class Article(db.Model):
