@@ -1,5 +1,7 @@
 {% extends 'layout.html' %}
+
 {% block content %}
+
 <div class="container mt-4">
   <h1 class="mb-5 text-center">Admin Dashboard</h1>
 
@@ -40,17 +42,35 @@
       <p class="text-muted">No pending articles.</p>
     {% endif %}
 
-    <div class="pagination">
-      {% if articles.has_prev %}
-        <a href="{{ url_for('admin_dashboard', pending_page=articles.prev_num, approved_page=approved_articles.page) }}">Previous</a>
-      {% endif %}
+    <nav aria-label="Pending articles pagination">
+      <ul class="pagination justify-content-center">
+        {% if articles.has_prev %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin_dashboard', pending_page=articles.prev_num, approved_page=approved_articles.page) }}">«</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">«</span>
+          </li>
+        {% endif %}
 
-      Page {{ articles.page }} of {{ articles.pages }}
+        {% for page_num in range(1, articles.pages + 1) %}
+          <li class="page-item {% if articles.page == page_num %}active{% endif %}">
+            <a class="page-link" href="{{ url_for('admin_dashboard', pending_page=page_num, approved_page=approved_articles.page) }}">{{ page_num }}</a>
+          </li>
+        {% endfor %}
 
-      {% if articles.has_next %}
-        <a href="{{ url_for('admin_dashboard', pending_page=articles.next_num, approved_page=approved_articles.page) }}">Next</a>
-      {% endif %}
-    </div>
+        {% if articles.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin_dashboard', pending_page=articles.next_num, approved_page=approved_articles.page) }}">»</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">»</span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
 
   </div>
 
@@ -79,17 +99,35 @@
     {% endif %}
   </div>
 
-    <div class="pagination">
-      {% if approved_articles.has_prev %}
-        <a href="{{ url_for('admin_dashboard', approved_page=approved_articles.prev_num, pending_page=articles.page) }}">Previous</a>
-      {% endif %}
+    <nav aria-label="Approved articles pagination">
+      <ul class="pagination justify-content-center">
+        {% if approved_articles.has_prev %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin_dashboard', approved_page=approved_articles.prev_num, pending_page=articles.page) }}">«</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">«</span>
+          </li>
+        {% endif %}
 
-      Page {{ approved_articles.page }} of {{ approved_articles.pages }}
+        {% for page_num in range(1, approved_articles.pages + 1) %}
+          <li class="page-item {% if approved_articles.page == page_num %}active{% endif %}">
+            <a class="page-link" href="{{ url_for('admin_dashboard', approved_page=page_num, pending_page=articles.page) }}">{{ page_num }}</a>
+          </li>
+        {% endfor %}
 
-      {% if approved_articles.has_next %}
-        <a href="{{ url_for('admin_dashboard', approved_page=approved_articles.next_num, pending_page=articles.page) }}">Next</a>
-      {% endif %}
-    </div>
+        {% if approved_articles.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('admin_dashboard', approved_page=approved_articles.next_num, pending_page=articles.page) }}">»</a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">»</span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
 
 </div>
 
