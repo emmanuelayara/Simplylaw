@@ -7,6 +7,25 @@
           Simply Lawverse; <b>Simplifying Law,</b> <cite title="Source Title">  Amplifying Justice.</cite>
         </figcaption> <br>
 
+    <div class="mb-4">
+      <form method="get" action="{{ url_for('home') }}">
+        <div class="row g-2 align-items-center">
+          <div class="col-auto">
+            <label for="category" class="form-label mb-0 fw-bold">Filter by Category:</label>
+          </div>
+          <div class="col-auto">
+            <select class="form-select form-select-sm" name="category" onchange="this.form.submit()">
+              <option value="">All</option>
+              {% for cat in categories %}
+                <option value="{{ cat[0] }}" {% if selected_category == cat[0] %}selected{% endif %}>{{ cat[0] }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+
   {% if articles %}
     <div class="row">
       {% for article in articles %}

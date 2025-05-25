@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField
+from wtforms import StringField, TextAreaField, SubmitField, SelectField
 from wtforms.validators import DataRequired, Email
 from wtforms import PasswordField
 from flask_wtf import FlaskForm
@@ -38,6 +38,7 @@ class ArticleSubmissionForm(FlaskForm):
     author = StringField('Author', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
+    category = SelectField('Category', choices=[('law', 'Law'), ('justice', 'Justice'), ('news', 'News')], validators=[DataRequired()])
     image = FileField('Article Image', validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'], 'Images only!')])
     document = FileField('Supporting Document', validators=[FileAllowed(['pdf', 'doc', 'docx'], 'Documents only!')])
     submit = SubmitField('Submit')

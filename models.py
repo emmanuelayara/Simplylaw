@@ -28,6 +28,7 @@ class Article(db.Model):
     date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
     image_filename = db.Column(db.String(120), nullable=True)
     document_filename = db.Column(db.String(120), nullable=True)
+    category = db.Column(db.String(100), nullable=False, default='General')
     approved = db.Column(db.Boolean, default=False)  # <- important!
 
 

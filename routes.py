@@ -19,8 +19,14 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
-    articles = Article.query.filter_by(status='approved').order_by(Article.id.desc()).all()
-    return render_template('home.html', articles=articles)
+    category = request.args.get('category')
+    if category:
+        articles = Article.query.filter_by(category=category).order_by(Article.date_posted.desc()).all()
+    else:
+        articles = Article.query.filter_by(status='approved').order_by(Article.id.desc()).all()
+    categories = db.session.query(Article.category).distinct().all()
+    return render_template('home.html', articles=articles, categories=categories, selected_category=category)
+
 
 
 @app.route('/admin/approve/<int:article_id>')
@@ -77,8 +83,9 @@ def submit_article():
             email=form.email.data,
             title=form.title.data,
             content=form.content.data,
-            image_filename=image_filename,             # Optional: ensure this exists in your model
-            document_filename=document_filename        # Optional: ensure this exists in your model
+            category=form.category.data,  # Correct way to get category
+            image_filename=image_filename,
+            document_filename=document_filename
         )
         
         db.session.add(article)
@@ -87,6 +94,7 @@ def submit_article():
         return redirect(url_for('home'))
 
     return render_template('submit_article.html', form=form)
+
 
 
 @app.route('/admin/register', methods=['GET', 'POST'])
