@@ -5,13 +5,13 @@
 
   <!-- Welcome Message -->
   <div class="alert alert-info text-center">
-    Welcome, {{ current_user.name }} ({{ current_user.email }})
+    Welcome, {{ current_user.username }} ({{ current_user.email }})
   </div>
 
   <!-- Pending Articles Section -->
   <div class="mb-5">
     <h3 class="mb-3 text-primary">Pending Articles</h3>
-    {% if pending_articles %}
+    {% if articles %}
       {% for article in articles %}
         <div class="card mb-3 shadow-sm">
           <div class="card-header d-flex justify-content-between align-items-center">
@@ -53,7 +53,10 @@
           <div class="card-body">
             {{ article.content[:250] }}...
             <div class="mt-2">
-              <a href="{{ url_for('view_article', article_id=article.id) }}" class="btn btn-sm btn-outline-light">Read Full Article</a>
+              <a href="{{ url_for('view_article', article_id=article.id) }}" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+            </div>
+            <div>
+              <a href="{{ url_for('disapprove_article', article_id=article.id) }}" class="btn btn-sm btn-danger">Delete</a>
             </div>
           </div>
         </div>
