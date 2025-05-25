@@ -27,7 +27,7 @@ class Article(db.Model):
     likes = db.Column(db.Integer, default=0, nullable=False)
     status = db.Column(db.String(20), nullable=False, default='pending')
     date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
-    image_filename = db.Column(db.String(120), nullable=True)
+    cover_image = db.Column(db.String(100))  # New field
     document_filename = db.Column(db.String(120), nullable=True)
     category = db.Column(db.String(100), nullable=False, default='General')
     approved = db.Column(db.Boolean, default=False)  # <- important!

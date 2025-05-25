@@ -11,6 +11,43 @@ from flask import request, redirect, url_for, flash, render_template
 from werkzeug.utils import secure_filename
 import os
 from flask import render_template
+from flask import request, redirect, url_for, flash
+from werkzeug.utils import secure_filename
+import os
+
+
+
+
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static/uploads')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_cover_image():
+    if request.method == 'POST':
+        if 'cover_image' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        
+        file = request.files['cover_image']
+        
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(request.url)
+
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            flash('Upload successful!')
+            return redirect(url_for('upload_cover_image'))
+
+    return render_template('submit_article.html')  # Make sure you have the HTML form here
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -73,7 +110,7 @@ def like_article(article_id):
 
     if article.likes is None:
         article.likes = 0  # safety fallback
-        
+
     # Optional: Prevent multiple likes using IP address or user ID
     article.likes += 1
     db.session.commit()
@@ -84,33 +121,33 @@ def like_article(article_id):
 @app.route('/submit', methods=['GET', 'POST'])
 def submit_article():
     form = ArticleSubmissionForm()
-    
-    # Set category choices dynamically (or statically)
-    form.category.choices = [
-        ("Criminal Law"), ("Family Law"), ("Constitutional Law"), 
-        ("Tech Law"), ("Property Law"), ("Administrative Law"), 
-        ("International Law"), ("Contract Law"), ("Tort Law"),
-        ("Succession Law"), ("Corporate Law"), ("Commercial Law"), 
-        ("Banking and Finance Law"), ("Securities Law"), ("Civil Litigation"), 
-        ("Criminal Litigation"), ("Alternative Dispute Resolution"), ("Environmental Law"), 
-        ("Energy Law"), ("Intellectual Property Law"), ("Copyright Law"), 
-        ("Patent Law"), ("Trademark Law"), ("Trade Secrets Law"), 
-        ("Labour and Employment Law"), ("Human Rights Law"), ("Health and Medical Law"), 
-        ("Real Estate Law"), ("Transportation Law"), ("Cyber Law"), 
-        ("Data Protection and Privacy Law"), ("Space Law"), ("Sports and Entertainment Law"), 
-        ("Media and Communications Law"), ("Education Law"), ("Agricultural Law"), 
-        ("Animal Law"), ("Maritime and Admiralty Law"), ("Immigration Law"), 
-        ("Tax Law"), ("Military Law"), ("Bankruptcy Law"), 
-        ("Consumer Protection Law"), ("Public Interest Law"), ("Customary and Indigenous Law")
-    ]
+
+    # Set category choices (ensure each is a tuple of (value, label))
+    form.category.choices = [(cat, cat) for cat in [
+        "Criminal Law", "Family Law", "Constitutional Law", 
+        "Tech Law", "Property Law", "Administrative Law", 
+        "International Law", "Contract Law", "Tort Law",
+        "Succession Law", "Corporate Law", "Commercial Law", 
+        "Banking and Finance Law", "Securities Law", "Civil Litigation", 
+        "Criminal Litigation", "Alternative Dispute Resolution", "Environmental Law", 
+        "Energy Law", "Intellectual Property Law", "Copyright Law", 
+        "Patent Law", "Trademark Law", "Trade Secrets Law", 
+        "Labour and Employment Law", "Human Rights Law", "Health and Medical Law", 
+        "Real Estate Law", "Transportation Law", "Cyber Law", 
+        "Data Protection and Privacy Law", "Space Law", "Sports and Entertainment Law", 
+        "Media and Communications Law", "Education Law", "Agricultural Law", 
+        "Animal Law", "Maritime and Admiralty Law", "Immigration Law", 
+        "Tax Law", "Military Law", "Bankruptcy Law", 
+        "Consumer Protection Law", "Public Interest Law", "Customary and Indigenous Law"
+    ]]
 
     if form.validate_on_submit():
-        # Handle image upload
-        image = request.files.get('image')
-        image_filename = None
-        if image and image.filename:
-            image_filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], image_filename))
+        # Handle cover image upload
+        cover_image = request.files.get('image')
+        cover_image_filename = None
+        if cover_image and cover_image.filename:
+            cover_image_filename = secure_filename(cover_image.filename)
+            cover_image.save(os.path.join(app.config['UPLOAD_FOLDER'], cover_image_filename))
 
         # Handle document upload
         document = request.files.get('document')
@@ -119,23 +156,28 @@ def submit_article():
             document_filename = secure_filename(document.filename)
             document.save(os.path.join(app.config['UPLOAD_FOLDER'], document_filename))
 
-        # Create article object
+        # Create Article record
         article = Article(
             author=form.author.data,
             email=form.email.data,
             title=form.title.data,
             content=form.content.data,
             category=form.category.data,
-            image_filename=image_filename,             # Optional: ensure this exists in your model
-            document_filename=document_filename        # Optional: ensure this exists in your model
+            cover_image=cover_image_filename,          # Ensure your model has this field
+            document_filename=document_filename        # Ensure your model has this field
         )
         
         db.session.add(article)
         db.session.commit()
+
         flash('Article submitted successfully and is awaiting approval.', 'success')
         return redirect(url_for('home'))
+    else:
+        print("Form not validated")
+        print(form.errors)
 
     return render_template('submit_article.html', form=form)
+
 
 
 

@@ -1,8 +1,8 @@
 """initial
 
-Revision ID: c09dda348c9a
+Revision ID: 26c870dee028
 Revises: 
-Create Date: 2025-05-25 14:42:20.125158
+Create Date: 2025-05-25 19:11:02.168436
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c09dda348c9a'
+revision = '26c870dee028'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,9 +25,10 @@ def upgrade():
     sa.Column('content', sa.Text(), nullable=False),
     sa.Column('author', sa.String(length=100), nullable=False),
     sa.Column('date_posted', sa.DateTime(), nullable=True),
+    sa.Column('likes', sa.Integer(), nullable=False),
     sa.Column('status', sa.String(length=20), nullable=False),
     sa.Column('date_submitted', sa.DateTime(), nullable=True),
-    sa.Column('image_filename', sa.String(length=120), nullable=True),
+    sa.Column('cover_image', sa.String(length=100), nullable=True),
     sa.Column('document_filename', sa.String(length=120), nullable=True),
     sa.Column('category', sa.String(length=100), nullable=False),
     sa.Column('approved', sa.Boolean(), nullable=True),

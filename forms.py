@@ -39,6 +39,6 @@ class ArticleSubmissionForm(FlaskForm):
     content = TextAreaField('Content', validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
     category = SelectField('Category', choices=[], validators=[DataRequired()])
-    image = FileField('Article Image', validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'], 'Images only!')])
+    cover_image = FileField('Cover Image', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
     document = FileField('Supporting Document', validators=[FileAllowed(['pdf', 'doc', 'docx'], 'Documents only!')])
     submit = SubmitField('Submit')
