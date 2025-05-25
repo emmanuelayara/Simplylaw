@@ -58,10 +58,30 @@ def read_more(article_id):
     return render_template('read_more.html', article=article, comments=comments)
 
 
+
 @app.route('/submit', methods=['GET', 'POST'])
 def submit_article():
     form = ArticleSubmissionForm()
     
+    # Set category choices dynamically (or statically)
+    form.category.choices = [
+        ("Criminal Law"), ("Family Law"), ("Constitutional Law"), 
+        ("Tech Law"), ("Property Law"), ("Administrative Law"), 
+        ("International Law"), ("Contract Law"), ("Tort Law"),
+        ("Succession Law"), ("Corporate Law"), ("Commercial Law"), 
+        ("Banking and Finance Law"), ("Securities Law"), ("Civil Litigation"), 
+        ("Criminal Litigation"), ("Alternative Dispute Resolution"), ("Environmental Law"), 
+        ("Energy Law"), ("Intellectual Property Law"), ("Copyright Law"), 
+        ("Patent Law"), ("Trademark Law"), ("Trade Secrets Law"), 
+        ("Labour and Employment Law"), ("Human Rights Law"), ("Health and Medical Law"), 
+        ("Real Estate Law"), ("Transportation Law"), ("Cyber Law"), 
+        ("Data Protection and Privacy Law"), ("Space Law"), ("Sports and Entertainment Law"), 
+        ("Media and Communications Law"), ("Education Law"), ("Agricultural Law"), 
+        ("Animal Law"), ("Maritime and Admiralty Law"), ("Immigration Law"), 
+        ("Tax Law"), ("Military Law"), ("Bankruptcy Law"), 
+        ("Consumer Protection Law"), ("Public Interest Law"), ("Customary and Indigenous Law")
+    ]
+
     if form.validate_on_submit():
         # Handle image upload
         image = request.files.get('image')
@@ -83,9 +103,9 @@ def submit_article():
             email=form.email.data,
             title=form.title.data,
             content=form.content.data,
-            category=form.category.data,  # Correct way to get category
-            image_filename=image_filename,
-            document_filename=document_filename
+            category=form.category.data,
+            image_filename=image_filename,             # Optional: ensure this exists in your model
+            document_filename=document_filename        # Optional: ensure this exists in your model
         )
         
         db.session.add(article)
