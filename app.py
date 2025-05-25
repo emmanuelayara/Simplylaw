@@ -8,6 +8,9 @@ from flask_migrate import Migrate
 # Initialize app and extensions
 app = Flask(__name__)
 
+# your routes, models, config, etc.
+
+
 # Configure upload folder and allowed extensions
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Create folder if it doesn't exist
