@@ -19,13 +19,23 @@ def load_user(user_id):
 
 @app.route('/')
 def home():
+    page = request.args.get('page', 1, type=int)
     category = request.args.get('category')
+    per_page = 5  # number of articles per page
+
     if category:
-        articles = Article.query.filter_by(category=category).order_by(Article.date_posted.desc()).all()
+        articles = Article.query.filter_by(category=category, status='approved')\
+                                .order_by(Article.date_posted.desc())\
+                                .paginate(page=page, per_page=per_page)
     else:
-        articles = Article.query.filter_by(status='approved').order_by(Article.id.desc()).all()
+        articles = Article.query.filter_by(status='approved')\
+                                .order_by(Article.id.desc())\
+                                .paginate(page=page, per_page=per_page)
+
     categories = db.session.query(Article.category).distinct().all()
+
     return render_template('home.html', articles=articles, categories=categories, selected_category=category)
+
 
 
 
