@@ -170,9 +170,24 @@ def admin_dashboard():
     if not current_user.is_admin:
         flash('Access denied.', 'danger')
         return redirect(url_for('home'))
-    pending = Article.query.filter_by(status='pending').all()
-    approved = Article.query.filter_by(status='approved').all()
-    return render_template('admin_dashboard.html', articles=pending, approved_articles=approved)
+
+    pending_page = request.args.get('pending_page', 1, type=int)
+    approved_page = request.args.get('approved_page', 1, type=int)
+    per_page = 3
+
+    pending = Article.query.filter_by(status='pending')\
+                .order_by(Article.date_posted.desc())\
+                .paginate(page=pending_page, per_page=per_page)
+
+    approved = Article.query.filter_by(status='approved')\
+                .order_by(Article.date_posted.desc())\
+                .paginate(page=approved_page, per_page=per_page)
+
+    return render_template(
+        'admin_dashboard.html',
+        articles=pending,
+        approved_articles=approved
+    )
 
 
 @app.route('/admin/logout')
