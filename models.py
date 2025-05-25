@@ -24,6 +24,7 @@ class Article(db.Model):
     author = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
     comments = db.relationship('Comment', backref='article', lazy=True)
+    likes = db.Column(db.Integer, default=0, nullable=False)
     status = db.Column(db.String(20), nullable=False, default='pending')
     date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
     image_filename = db.Column(db.String(120), nullable=True)

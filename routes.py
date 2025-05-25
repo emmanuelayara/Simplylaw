@@ -25,11 +25,11 @@ def home():
 
     if category:
         articles = Article.query.filter_by(category=category, status='approved')\
-                                .order_by(Article.date_posted.desc())\
+                                .order_by(Article.likes.desc(), Article.date_posted.desc())\
                                 .paginate(page=page, per_page=per_page)
     else:
         articles = Article.query.filter_by(status='approved')\
-                                .order_by(Article.id.desc())\
+                                .order_by(Article.likes.desc(), Article.id.desc())\
                                 .paginate(page=page, per_page=per_page)
 
     categories = db.session.query(Article.category).distinct().all()
@@ -67,6 +67,18 @@ def read_more(article_id):
     comments = Comment.query.filter_by(article_id=article_id).order_by(Comment.date_posted.desc()).all()
     return render_template('read_more.html', article=article, comments=comments)
 
+@app.route('/like/<int:article_id>', methods=['POST'])
+def like_article(article_id):
+    article = Article.query.get_or_404(article_id)
+
+    if article.likes is None:
+        article.likes = 0  # safety fallback
+        
+    # Optional: Prevent multiple likes using IP address or user ID
+    article.likes += 1
+    db.session.commit()
+    flash('You liked the article.', 'success')
+    return redirect(request.referrer or url_for('read_more', article_id=article_id))
 
 
 @app.route('/submit', methods=['GET', 'POST'])

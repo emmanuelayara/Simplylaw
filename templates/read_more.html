@@ -16,7 +16,12 @@
   {% endif %}
 </div>
     </div>
-  </div>
+        <form action="{{ url_for('like_article', article_id=article.id) }}" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-sm btn-outline-danger">
+            ❤️ like ({{ article.likes }})
+        </button>
+        </form>
+</div>
 
 
 <div class="mt-4 d-flex justify-content-left">
