@@ -16,29 +16,28 @@ from flask import render_template
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+
 @app.route('/')
 def home():
-    articles = Article.query.filter_by(approved=True).order_by(Article.id.desc()).all()
+    articles = Article.query.filter_by(status='approved').order_by(Article.id.desc()).all()
     return render_template('home.html', articles=articles)
 
+
 @app.route('/admin/approve/<int:article_id>')
-@login_required
 def approve_article(article_id):
     article = Article.query.get_or_404(article_id)
-    article.is_approved = True
+    article.status = 'approved'
     db.session.commit()
-    flash('Article approved.', 'success')
+    flash('Article approved successfully.', 'success')
     return redirect(url_for('admin_dashboard'))
 
-
-@app.route('/disapprove/<int:article_id>')
+@app.route('/admin/disapprove/<int:article_id>')
 def disapprove_article(article_id):
     article = Article.query.get_or_404(article_id)
-    db.session.delete(article)
+    article.status = 'disapproved'
     db.session.commit()
-    flash('Article disapproved and deleted.', 'danger')
+    flash('Article disapproved.', 'warning')
     return redirect(url_for('admin_dashboard'))
-
 
 
 @app.route('/article/<int:article_id>')
@@ -121,6 +120,7 @@ def admin_login():
             flash('Invalid credentials or not an admin.', 'danger')
     return render_template('admin_login.html', form=form)
 
+
 @app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
@@ -128,8 +128,8 @@ def admin_dashboard():
         flash('Access denied.', 'danger')
         return redirect(url_for('home'))
     pending = Article.query.filter_by(status='pending').all()
-    return render_template('admin_dashboard.html', articles=pending)
-
+    approved = Article.query.filter_by(status='approved').all()
+    return render_template('admin_dashboard.html', articles=pending, approved_articles=approved)
 
 
 @app.route('/admin/logout')

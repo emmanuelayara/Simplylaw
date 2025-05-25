@@ -1,9 +1,9 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h2>Published Articles</h2>
+<h2> <em> Welcome to the Lawverse </em> </h2> <br> <br>
 {% for article in articles %}
   <div class="card mb-3">
-    <div class="card-header">{{ article.title }} by {{ article.author }}</div>
+    <div class="card-header"><strong>{{ article.title }}</strong> by <em>{{ article.author }} </em> </div>
     <div class="card-body">{{ article.content }}</div>
   </div>
 {% else %}
