@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash
 from app import app, db, login_manager
 from forms import LoginForm, ArticleSubmissionForm, AdminRegisterForm, ContactForm, CommentForm
 from models import Message
-from models import User, Article
+from models import User, Article, Comment
 from werkzeug.security import generate_password_hash
 from flask import request, redirect, url_for, flash, render_template
 from werkzeug.utils import secure_filename
@@ -45,6 +45,11 @@ def view_article(article_id):
     article = Article.query.get_or_404(article_id)
     return render_template('view_article.html', article=article)
 
+@app.route('/article/<int:article_id>')
+def read_more(article_id):
+    article = Article.query.get_or_404(article_id)
+    comments = Comment.query.filter_by(article_id=article_id).order_by(Comment.date_posted.desc()).all()
+    return render_template('read_article.html', article=article, comments=comments)
 
 
 @app.route('/submit', methods=['GET', 'POST'])
@@ -158,3 +163,13 @@ def contact():
         flash('Your message has been sent.', 'success')
         return redirect(url_for('contact'))
     return render_template('contact.html', form=form)
+
+
+@app.route('/article/<int:article_id>/comment', methods=['POST'])
+def comment(article_id):
+    name = request.form['name']
+    text = request.form['comment']
+    comment = Comment(name=name, text=text, article_id=article_id)
+    db.session.add(comment)
+    db.session.commit()
+    return redirect(url_for('read_more', article_id=article_id))

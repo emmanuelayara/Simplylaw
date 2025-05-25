@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">{{ article.title }}</h2>
+      <small>By <em>{{ article.author }}</em> | {{ article.date_posted.strftime('%B %d, %Y') if article.date_posted else 'Unpublished' }}</small>
+    </div>
+    <div class="card-body">
+      <p class="lead">{{ article.content }}</p>
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <h4>Leave a Comment</h4>
+    <form method="POST" action="{{ url_for('comment', article_id=article.id) }}">
+      <div class="mb-3">
+        <label for="name" class="form-label">Your Name</label>
+        <input type="text" class="form-control" name="name" required>
+      </div>
+      <div class="mb-3">
+        <label for="comment" class="form-label">Comment</label>
+        <textarea class="form-control" name="comment" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Post Comment</button>
+    </form>
+  </div>
+
+  {% if comments %}
+    <div class="mt-5">
+      <h4>Comments ({{ comments|length }})</h4>
+      {% for comment in comments %}
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted">{{ comment.name }}</h6>
+            <p class="card-text">{{ comment.content }}</p>
+            <small class="text-muted">{{ comment.date_posted.strftime('%B %d, %Y, %I:%M %p') if comment.date_posted else '' }}</small>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="mt-4 text-muted">No comments yet. Be the first to comment!</p>
+  {% endif %}
+</div>
+
+{% endblock %}
