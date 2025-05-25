@@ -1,44 +1,66 @@
 {% extends 'layout.html' %}
 {% block content %}
+<div class="container mt-4">
+  <h1 class="mb-5 text-center">Admin Dashboard</h1>
 
-<div class="alert alert-info">
-  Welcome, <strong>{{ current_user.username }}</strong> (<em>{{ current_user.email }}</em>)!
-</div>
-
-<h2 class="mb-4">Pending Articles</h2>
-
-{% for article in articles %}
-  <div class="card mb-4 shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <div>
-        <strong>
-          <a href="{{ url_for('view_article', article_id=article.id) }}">
-            {{ article.title }}
-          </a>
-        </strong>
-        <br>
-        <small>by {{ article.author }}</small>
-      </div>
-      <div>
-        <a href="{{ url_for('approve_article', article_id=article.id) }}" class="btn btn-sm btn-success">Approve</a>
-        <a href="{{ url_for('disapprove_article', article_id=article.id) }}" class="btn btn-sm btn-danger">Disapprove</a>
-      </div>
-    </div>
-    <div class="card-body">
-      {{ article.content[:250] }}...
-      <div class="mt-2">
-        <a href="{{ url_for('view_article', article_id=article.id) }}" class="btn btn-sm btn-outline-primary">Read Full Article</a>
-      </div>
-    </div>
+  <!-- Welcome Message -->
+  <div class="alert alert-info text-center">
+    Welcome, {{ current_user.name }} ({{ current_user.email }})
   </div>
-{% else %}
-  <p>No pending articles.</p>
-{% endfor %}
 
+  <!-- Pending Articles Section -->
+  <div class="mb-5">
+    <h3 class="mb-3 text-primary">Pending Articles</h3>
+    {% if pending_articles %}
+      {% for article in pending_articles %}
+        <div class="card mb-3 shadow-sm">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <div>
+              <strong>
+                <a href="{{ url_for('view_article', article_id=article.id) }}">
+                  {{ article.title }}
+                </a>
+              </strong><br>
+              <small>by {{ article.author }}</small>
+            </div>
+            <div>
+              <a href="{{ url_for('approve_article', article_id=article.id) }}" class="btn btn-sm btn-success">Approve</a>
+              <a href="{{ url_for('disapprove_article', article_id=article.id) }}" class="btn btn-sm btn-danger">Disapprove</a>
+            </div>
+          </div>
+          <div class="card-body">
+            {{ article.content[:250] }}...
+            <div class="mt-2">
+              <a href="{{ url_for('view_article', article_id=article.id) }}" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted">No pending articles.</p>
+    {% endif %}
+  </div>
 
-<h2 class="mt-5">Approved Articles</h2>
-{% for article in approved_articles %}
-  <!-- render approved articles -->
-{% endfor %}
-
+  <!-- Approved Articles Section -->
+  <div>
+    <h3 class="mb-3 text-success">Approved Articles</h3>
+    {% if approved_articles %}
+      {% for article in approved_articles %}
+        <div class="card mb-3 shadow-sm border-success">
+          <div class="card-header bg-success text-white">
+            {{ article.title }} by {{ article.author }}
+          </div>
+          <div class="card-body">
+            {{ article.content[:250] }}...
+            <div class="mt-2">
+              <a href="{{ url_for('view_article', article_id=article.id) }}" class="btn btn-sm btn-outline-light">Read Full Article</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-muted">No approved articles yet.</p>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}
