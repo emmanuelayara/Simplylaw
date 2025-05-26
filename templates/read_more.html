@@ -11,7 +11,47 @@
     <div class="card-body">
       <p class="lead">{{ article.content }}</p>
       <div class="mt-4">
-</div>
+
+        <!-- Social Share Section -->
+        <div class="mt-4">
+        <p><strong>Share this article:</strong></p>
+        <div class="d-flex gap-2 align-items-center">
+
+            <!-- WhatsApp -->
+            <a href="https://wa.me/?text={{ request.url }}" target="_blank" title="Share on WhatsApp" class="text-success fs-5">
+            <i class="fab fa-whatsapp"></i>
+            </a>
+
+            <!-- Facebook -->
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" title="Share on Facebook" class="text-primary fs-5">
+            <i class="fab fa-facebook"></i>
+            </a>
+
+            <!-- X (Twitter) -->
+            <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ article.title }}" target="_blank" title="Share on X" class="text-dark fs-5">
+            <i class="fab fa-x-twitter"></i>
+            </a>
+
+            <!-- LinkedIn -->
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.url }}&title={{ article.title }}" target="_blank" title="Share on LinkedIn" class="text-info fs-5">
+            <i class="fab fa-linkedin"></i>
+            </a>
+
+            <!-- Email -->
+            <a href="mailto:?subject={{ article.title }}&body={{ request.url }}" title="Share via Email" class="text-secondary fs-5">
+            <i class="fas fa-envelope"></i>
+            </a>
+
+            <!-- Copy to Clipboard -->
+            <button onclick="copyLink('{{ request.url }}')" class="btn btn-sm btn-outline-secondary" title="Copy Link">
+            <i class="fas fa-copy"></i>
+            <small id="copyMsg" class="text-success d-none mt-2">Link copied to clipboard!</small>
+            </button>
+        </div>
+        </div>
+
+
+        </div>
     </div>
         <form action="{{ url_for('like_article', article_id=article.id) }}" method="post" style="display:inline;">
         <button type="submit" class="btn btn-sm btn-outline-danger">
