@@ -54,25 +54,39 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
+from sqlalchemy import or_
+
 @app.route('/')
 def home():
     page = request.args.get('page', 1, type=int)
     category = request.args.get('category')
-    per_page = 5  # number of articles per page
+    search_query = request.args.get('search', '', type=str)
+    per_page = 5
 
+    # Start with base query
+    query = Article.query.filter(Article.status == 'approved')
+
+    # Apply category filter
     if category:
-        articles = Article.query.filter_by(category=category, status='approved')\
-                                .order_by(Article.likes.desc(), Article.date_posted.desc())\
-                                .paginate(page=page, per_page=per_page)
-    else:
-        articles = Article.query.filter_by(status='approved')\
-                                .order_by(Article.likes.desc(), Article.id.desc())\
-                                .paginate(page=page, per_page=per_page)
+        query = query.filter(Article.category == category)
+
+    # Apply search filter (searching in title and content)
+    if search_query:
+        query = query.filter(
+            or_(
+                Article.title.ilike(f'%{search_query}%'),
+                Article.content.ilike(f'%{search_query}%')
+            )
+        )
+
+    # Finalize with ordering and pagination
+    articles = query.order_by(Article.likes.desc(), Article.date_posted.desc())\
+                    .paginate(page=page, per_page=per_page)
 
     categories = db.session.query(Article.category).distinct().all()
 
-    return render_template('home.html', articles=articles, categories=categories, selected_category=category)
-
+    return render_template('home.html', articles=articles, categories=categories, 
+                           selected_category=category, search_query=search_query)
 
 
 

@@ -11,9 +11,6 @@
     <div class="card-body">
       <p class="lead">{{ article.content }}</p>
       <div class="mt-4">
-  {% if article.image_filename %}
-    <img src="{{ url_for('static', filename='uploads/' + article.image_filename) }}" alt="Article Image" class="img-fluid rounded mb-3" style="height: 90px; width: 90px;">
-  {% endif %}
 </div>
     </div>
         <form action="{{ url_for('like_article', article_id=article.id) }}" method="post" style="display:inline;">
