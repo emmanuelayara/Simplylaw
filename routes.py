@@ -115,8 +115,22 @@ def view_article(article_id):
 @app.route('/read/<int:article_id>')
 def read_more(article_id):
     article = Article.query.get_or_404(article_id)
+
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(
+            content=form.content.data,
+            user_id=current_user.id,
+            article_id=article.id,
+            parent_id=form.parent_id.data or None
+        )
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('article_detail', article_id=article.id))
+
     comments = Comment.query.filter_by(article_id=article_id).order_by(Comment.date_posted.desc()).all()
     return render_template('read_more.html', article=article, comments=comments)
+
 
 @app.route('/like/<int:article_id>', methods=['POST'])
 def like_article(article_id):

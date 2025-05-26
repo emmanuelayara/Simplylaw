@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField, SelectField
+from wtforms import StringField, TextAreaField, SubmitField, SelectField, HiddenField
 from wtforms.validators import DataRequired, Email
 from wtforms import PasswordField
 from flask_wtf import FlaskForm
@@ -11,6 +11,7 @@ class CommentForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     email = StringField('Email', validators=[Email()])
     content = TextAreaField('Comment', validators=[DataRequired()])
+    parent_id = HiddenField()
     submit = SubmitField('Post Comment')
 
 class ContactForm(FlaskForm):

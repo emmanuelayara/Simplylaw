@@ -60,7 +60,7 @@
         </form>
 </div>
 
-
+<!-- Comment Form -->
 <div class="mt-4 d-flex justify-content-left">
   <div class="col-md-5">
     <div class="card shadow-sm border-0">
@@ -70,13 +70,14 @@
       <div class="card-body p-3">
         <form method="POST" action="{{ url_for('comment', article_id=article.id) }}">
           <div class="mb-2">
-            <label for="name" class="form-label small mb-1">Your Name</label>
+            <label class="form-label small mb-1">Your Name</label>
             <input type="text" class="form-control form-control-sm" name="name" placeholder="Name" required>
           </div>
           <div class="mb-3">
-            <label for="comment" class="form-label small mb-1">Comment</label>
+            <label class="form-label small mb-1">Comment</label>
             <textarea class="form-control form-control-sm" name="comment" rows="3" placeholder="Write a comment..." required></textarea>
           </div>
+          <input type="hidden" name="parent_id" value="">
           <div class="text-end">
             <button type="submit" class="btn btn-sm btn-success">Post</button>
           </div>
@@ -86,23 +87,61 @@
   </div>
 </div>
 
+<!-- Comments Display -->
+{% macro render_comment(comment) %}
+  <div class="card mb-2 ms-{{ 3 * (comment.level or 0) }} shadow-sm">
+    <div class="card-body">
+      <h6 class="card-subtitle mb-1 text-muted">{{ comment.name }}</h6>
+      <p class="card-text mb-1">{{ comment.content }}</p>
+      <small class="text-muted">{{ comment.date_posted.strftime('%B %d, %Y, %I:%M %p') if comment.date_posted else '' }}</small>
 
-  {% if comments %}
-    <div class="mt-5">
-      <h4>Comments ({{ comments|length }})</h4>
-      {% for comment in comments %}
-        <div class="card mb-3 shadow-sm">
-          <div class="card-body">
-            <h6 class="card-subtitle mb-2 text-muted">{{ comment.name }}</h6>
-            <p class="card-text">{{ comment.content }}</p>
-            <small class="text-muted">{{ comment.date_posted.strftime('%B %d, %Y, %I:%M %p') if comment.date_posted else '' }}</small>
-          </div>
+      <!-- Reply Button -->
+      <div class="mt-2">
+        <a href="#" class="small reply-link text-primary" data-comment-id="{{ comment.id }}">Reply</a>
+      </div>
+
+      <!-- Hidden Reply Form -->
+      <form method="POST" action="{{ url_for('comment', article_id=article.id) }}" class="reply-form mt-2 d-none" id="reply-form-{{ comment.id }}">
+        <div class="mb-2">
+          <input type="text" class="form-control form-control-sm" name="name" placeholder="Your Name" required>
         </div>
+        <div class="mb-2">
+          <textarea class="form-control form-control-sm" name="comment" rows="2" placeholder="Write a reply..." required></textarea>
+        </div>
+        <input type="hidden" name="parent_id" value="{{ comment.id }}">
+        <div class="text-end">
+          <button type="submit" class="btn btn-sm btn-outline-success">Reply</button>
+        </div>
+      </form>
+
+      {% for reply in comment.replies %}
+        {{ render_comment(reply) }}
       {% endfor %}
     </div>
-  {% else %}
-    <p class="mt-4 text-muted">No comments yet. Be the first to comment!</p>
-  {% endif %}
-</div>
+  </div>
+{% endmacro %}
+
+{% if comments %}
+  <div class="mt-5">
+    <h4>Comments ({{ comments|length }})</h4>
+    {% for comment in comments if not comment.parent_id %}
+      {{ render_comment(comment) }}
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="mt-4 text-muted">No comments yet. Be the first to comment!</p>
+{% endif %}
+
+<!-- Toggle reply form -->
+<script>
+  document.querySelectorAll('.reply-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const commentId = this.getAttribute('data-comment-id');
+      const form = document.getElementById(`reply-form-${commentId}`);
+      form.classList.toggle('d-none');
+    });
+  });
+</script>
 
 {% endblock %}

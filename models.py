@@ -40,6 +40,8 @@ class Comment(db.Model):
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, default=datetime.utcnow)
     article_id = db.Column(db.Integer, db.ForeignKey('article.id'))  # Add this
+    parent_id = db.Column(db.Integer, db.ForeignKey('comment.id'), nullable=True)
+    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[id]), lazy='dynamic')
 
 class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True)
