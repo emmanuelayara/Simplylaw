@@ -1,20 +1,12 @@
 # app/routes.py
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from app import app, db, login_manager
 from forms import LoginForm, ArticleSubmissionForm, AdminRegisterForm, ContactForm, CommentForm
-from models import Message
-from models import User, Article, Comment
-from werkzeug.security import generate_password_hash
-from flask import request, redirect, url_for, flash, render_template
+from models import User, Article, Comment, Message
 from werkzeug.utils import secure_filename
 import os
-from flask import render_template
-from flask import request, redirect, url_for, flash
-from werkzeug.utils import secure_filename
-import os
-
 
 
 
