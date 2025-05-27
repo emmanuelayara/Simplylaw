@@ -1,10 +1,11 @@
 # app/routes.py
 from flask import render_template, redirect, url_for, flash, request
+from datetime import datetime, timedelta
 from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import app, db, login_manager
 from forms import LoginForm, ArticleSubmissionForm, AdminRegisterForm, ContactForm, CommentForm
-from models import User, Article, Comment, Message
+from models import User, Article, Comment, Message, Visit
 from werkzeug.utils import secure_filename
 import os
 
@@ -107,6 +108,16 @@ def view_article(article_id):
 @app.route('/read/<int:article_id>')
 def read_more(article_id):
     article = Article.query.get_or_404(article_id)
+
+    # Increment views
+    article.views = article.views + 1 if article.views else 1
+    db.session.commit()
+
+    # Log visit
+    visit = Visit(article_id=article.id)
+    db.session.add(visit)
+    db.session.commit()
+
 
     form = CommentForm()
     if form.validate_on_submit():
@@ -241,6 +252,21 @@ def admin_login():
 @app.route('/admin/dashboard')
 @login_required
 def admin_dashboard():
+
+    total_articles = Article.query.count()
+    total_visits = Visit.query.count()
+
+    now = datetime.utcnow()
+
+    daily_visits = Visit.query.filter(Visit.timestamp >= now - timedelta(days=1)).count()
+    weekly_visits = Visit.query.filter(Visit.timestamp >= now - timedelta(weeks=1)).count()
+    monthly_visits = Visit.query.filter(Visit.timestamp >= now - timedelta(days=30)).count()
+    yearly_visits = Visit.query.filter(Visit.timestamp >= now - timedelta(days=365)).count()
+
+    readers_per_article = db.session.query(
+        Article.title, db.func.count(Visit.id)
+    ).join(Visit, Article.id == Visit.article_id).group_by(Article.id).all()
+
     if not current_user.is_admin:
         flash('Access denied.', 'danger')
         return redirect(url_for('home'))
@@ -260,7 +286,14 @@ def admin_dashboard():
     return render_template(
         'admin_dashboard.html',
         articles=pending,
-        approved_articles=approved
+        approved_articles=approved,
+        total_articles=total_articles,
+        total_visits=total_visits,
+        daily_visits=daily_visits,
+        weekly_visits=weekly_visits,
+        monthly_visits=monthly_visits,
+        yearly_visits=yearly_visits,
+        readers_per_article=readers_per_article
     )
 
 
