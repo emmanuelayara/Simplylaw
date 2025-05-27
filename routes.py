@@ -280,16 +280,23 @@ def about():
 def contact():
     form = ContactForm()
     if form.validate_on_submit():
-        msg = Message(
+        new_message = Message(
             name=form.name.data,
             email=form.email.data,
             message=form.message.data
         )
-        db.session.add(msg)
+        db.session.add(new_message)
         db.session.commit()
-        flash('Your message has been sent.', 'success')
+        flash("Your message has been sent successfully!", "success")
         return redirect(url_for('contact'))
     return render_template('contact.html', form=form)
+
+
+@app.route('/messages')
+@login_required
+def view_messages():
+    messages = Message.query.order_by(Message.date_sent.desc()).all()
+    return render_template('messages.html', messages=messages)
 
 
 @app.route('/article/<int:article_id>/comment', methods=['POST'])

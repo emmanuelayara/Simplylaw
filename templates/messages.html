@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h3 class="mb-4">📩 Contact Messages</h3>
+    {% if messages %}
+        <div class="list-group">
+            {% for msg in messages %}
+                <div class="list-group-item mb-3 shadow-sm">
+                    <h6>{{ msg.name }} <small class="text-muted">({{ msg.email }})</small></h6>
+                    <p class="mb-1">{{ msg.message }}</p>
+                    <small class="text-muted">{{ msg.date_sent.strftime('%B %d, %Y, %I:%M %p') }}</small>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-muted">No messages yet.</p>
+    {% endif %}
+</div>
+{% endblock %}
