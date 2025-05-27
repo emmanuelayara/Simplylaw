@@ -26,6 +26,7 @@ class Article(db.Model):
     comments = db.relationship('Comment', backref='article', lazy=True)
     likes = db.Column(db.Integer, default=0, nullable=False)
     status = db.Column(db.String(20), nullable=False, default='pending')
+    views = db.Column(db.Integer, default=0)
     date_submitted = db.Column(db.DateTime, default=datetime.utcnow)
     cover_image = db.Column(db.String(100))  # New field
     document_filename = db.Column(db.String(120), nullable=True)
@@ -49,3 +50,9 @@ class Message(db.Model):
     email = db.Column(db.String(120), nullable=False)
     message = db.Column(db.Text, nullable=False)
     date_sent = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class Visit(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    article_id = db.Column(db.Integer, db.ForeignKey('article.id'))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
