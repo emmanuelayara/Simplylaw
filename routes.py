@@ -56,6 +56,8 @@ def home():
     search_query = request.args.get('search', '', type=str)
     per_page = 5
 
+    trending_articles = Article.query.order_by(Article.likes.desc()).limit(3).all()
+
     # Start with base query
     query = Article.query.filter(Article.status == 'approved')
 
@@ -79,7 +81,7 @@ def home():
     categories = db.session.query(Article.category).distinct().all()
 
     return render_template('home.html', articles=articles, categories=categories, 
-                           selected_category=category, search_query=search_query)
+                           selected_category=category, search_query=search_query, trending_articles=trending_articles)
 
 
 
