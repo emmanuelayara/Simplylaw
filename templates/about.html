@@ -1,100 +1,454 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-            <div class="about-page" style="max-width: 100%; margin: 0 auto; padding: 20px; line-height: 1.7;">
-             <h4 class="text-center mb-4">About Us | Simply Law-verse</h4>
+<style>
+    .about-container {
+        background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .hero-section {
+        background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.3;
+    }
+    
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .page-title {
+        font-size: 3rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        background: linear-gradient(45deg, #ffffff, #e3f2fd);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    
+    .hero-subtitle {
+        text-align: center;
+        font-size: 1.3rem;
+        font-weight: 300;
+        opacity: 0.95;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+    
+    .main-content {
+        padding: 80px 0;
+    }
+    
+    .intro-section {
+        background: white;
+        border-radius: 20px;
+        padding: 50px;
+        margin-bottom: 60px;
+        box-shadow: 0 20px 60px rgba(25, 118, 210, 0.1);
+        border: 1px solid rgba(25, 118, 210, 0.1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .intro-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1976d2, #42a5f5, #1976d2);
+        background-size: 200% 100%;
+        animation: shimmer 3s ease-in-out infinite;
+    }
+    
+    @keyframes shimmer {
+        0%, 100% { background-position: -200% 0; }
+        50% { background-position: 200% 0; }
+    }
+    
+    .intro-image {
+        width: 100%;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(25, 118, 210, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .intro-image:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 50px rgba(25, 118, 210, 0.3);
+    }
+    
+    .intro-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+    }
+    
+    .intro-text strong {
+        color: #1976d2;
+        font-weight: 600;
+    }
+    
+    .section-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        margin-bottom: 40px;
+        box-shadow: 0 15px 35px rgba(25, 118, 210, 0.08);
+        border: 1px solid rgba(25, 118, 210, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .section-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 50px rgba(25, 118, 210, 0.15);
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 25px;
+        position: relative;
+        padding-left: 20px;
+    }
+    
+    .section-title::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 40px;
+        border-radius: 3px;
+    }
+    
+    .mission-title::before { background: linear-gradient(135deg, #4caf50, #8bc34a); }
+    .vision-title::before { background: linear-gradient(135deg, #2196f3, #03a9f4); }
+    .goals-title::before { background: linear-gradient(135deg, #ff9800, #ffc107); }
+    .what-title::before { background: linear-gradient(135deg, #f44336, #e91e63); }
+    .join-title::before { background: linear-gradient(135deg, #009688, #4db6ac); }
+    
+    .mission-title { color: #2e7d32; }
+    .vision-title { color: #1565c0; }
+    .goals-title { color: #ef6c00; }
+    .what-title { color: #c62828; }
+    .join-title { color: #00695c; }
+    
+    .section-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 20px;
+    }
+    
+    .goals-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 40px;
+    }
+    
+    .goal-item {
+        text-align: center;
+        background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);
+        padding: 20px;
+        border-radius: 15px;
+        transition: transform 0.3s ease;
+        border: 2px solid rgba(25, 118, 210, 0.1);
+    }
+    
+    .goal-item:hover {
+        transform: scale(1.05);
+        border-color: rgba(25, 118, 210, 0.3);
+    }
+    
+    .goal-image {
+        width: 100%;
+        max-height: 250px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(25, 118, 210, 0.15);
+        transition: transform 0.3s ease;
+    }
+    
+    .goal-item:hover .goal-image {
+        transform: scale(1.02);
+    }
+    
+    .highlight-text {
+        background: linear-gradient(135deg, #1976d2, #42a5f5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 600;
+    }
+    
+    .cta-section {
+        background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+        color: white;
+        padding: 60px;
+        border-radius: 20px;
+        text-align: center;
+        margin-top: 60px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+    
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .cta-content {
+        position: relative;
+        z-index: 2;
+    }
+    
+    .cta-image {
+        max-width: 100%;
+        border-radius: 15px;
+        margin-top: 30px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    
+    .tagline {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-top: 30px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    
+    .emoji-list {
+        font-size: 1.2rem;
+        line-height: 2;
+        margin: 30px 0;
+    }
+    
+    .divider {
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #1976d2, transparent);
+        border: none;
+        margin: 60px 0;
+        border-radius: 1px;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .page-title {
+            font-size: 2.2rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            padding: 0 20px;
+        }
+        
+        .hero-section {
+            padding: 40px 0;
+        }
+        
+        .intro-section,
+        .section-card,
+        .cta-section {
+            padding: 30px 20px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            padding: 40px 0;
+        }
+        
+        .section-title {
+            font-size: 1.6rem;
+        }
+        
+        .goals-grid {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .intro-section .row {
+            flex-direction: column;
+        }
+        
+        .intro-section .col-md-4 {
+            margin-bottom: 30px;
+        }
+        
+        .tagline {
+            font-size: 1.4rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .page-title {
+            font-size: 1.8rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.4rem;
+            padding-left: 15px;
+        }
+        
+        .section-title::before {
+            width: 4px;
+            height: 30px;
+        }
+        
+        .intro-section,
+        .section-card {
+            padding: 20px 15px;
+        }
+        
+        .cta-section {
+            padding: 40px 20px;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+        }
+    }
+</style>
 
+<div class="about-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="page-title">About Us | Simply Law-verse</h1>
+                <p class="hero-subtitle">Empowering Minds, Enlightening the Legal World</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <!-- Introduction Section -->
+            <div class="intro-section">
                 <div class="row align-items-center">
                     <!-- Image Section -->
-                    <div class="col-md-4 text-center">
-                        <img src="/static/law image.jpeg" alt="SimplyLawVerse Banner" style="width: 100%; border-radius: 8px;">
+                    <div class="col-md-4 text-center mb-4 mb-md-0">
+                        <img src="/static/law image.jpeg" alt="SimplyLawVerse Banner" class="intro-image">
                     </div>
 
                     <!-- Text Section -->
                     <div class="col-md-8">
-                        <p><strong>Simply Law-verse</strong> is your go-to platform for legal insights, educational content, and updates on Nigerian and international law.</p>
-                        <p>We aim to simplify complex legal concepts and make them accessible to everyone in need — <br>from law students to legal professionals and the general public. <br> 
-                        To ensure that our society and everyone who is a part of it does not suffer from the consequences of the lack of legal knowledge, but instead uphold the torch of legal justice everywhere they go and in everything they do. </p>
+                        <p class="intro-text"><strong>Simply Law-verse</strong> is your go-to platform for legal insights, educational content, and updates on Nigerian and international law.</p>
+                        <p class="intro-text">We aim to simplify complex legal concepts and make them accessible to everyone in need — from law students to legal professionals and the general public. To ensure that our society and everyone who is a part of it does not suffer from the consequences of the lack of legal knowledge, but instead uphold the torch of <span class="highlight-text">legal justice</span> everywhere they go and in everything they do.</p>
                     </div>
                 </div>
             </div>
-            <hr>
 
-            <h3 style="color: #8e44ad; text-align: center;"><strong>Empowering Minds, Enlightening the Legal World</strong></h3>
-            <p>At Simply Law-verse, we believe the law shouldn’t be locked behind jargon or limited to courtrooms. We exist to make legal knowledge <em>simple</em>, <em>accessible</em>, and <em>empowering</em> for everyone — students, professionals, entrepreneurs, and the everyday citizen.</p>
+            <hr class="divider">
 
-            <hr>
+            <!-- Mission Section -->
+            <div class="section-card">
+                <h3 class="section-title mission-title">Our Mission</h3>
+                <p class="section-text">To break down the complexities of law and deliver daily, digestible, and reliable legal insights that educate, inspire, and elevate legal consciousness across Nigeria and beyond.</p>
+                <p class="section-text">
+                    • Deliver daily, relatable legal content that educates and enlightens<br>
+                    • Inspire legal curiosity in students, professionals, and citizens<br>
+                    • Foster a legally conscious society by making law accessible to all
+                </p>
+                <p class="section-text">We're committed to nurturing a legally aware society — <em>one post, one topic, one conversation at a time.</em></p>
+            </div>
 
-            <h3 style="color: #27ae60;"><strong>Our Mission</strong></h3>
-            <p>To break down the complexities of law and deliver daily, digestible, and reliable legal insights that educate, inspire, and elevate legal consciousness across Nigeria and beyond.</p>
-            <p>Deliver daily, relatable legal content that educates and enlightens. <br>
+            <!-- Vision Section -->
+            <div class="section-card">
+                <h3 class="section-title vision-title">Our Vision</h3>
+                <p class="section-text">To become <strong class="highlight-text">Africa's leading digital legal knowledge hub</strong>, bridging the gap between legal systems and society. We envision a world where every individual, regardless of background, can understand their rights, responsibilities, and legal environment — and confidently engage with it.</p>
+            </div>
 
-                Inspire legal curiosity in students, professionals, and <br>
-
-                Foster a legally conscious society by making law accessible to all. <br>
-            </p>
-            <p>We’re committed to nurturing a legally aware society — <em>one post, one topic, one conversation at a time.</em></p>
-
-            <hr>
-
-            <h3 style="color: #2980b9;"><strong>Our Vision</strong></h3>
-            <p>To become <strong>Africa’s leading digital legal knowledge hub</strong>, bridging the gap between legal systems and society. We envision a world where every individual, regardless of background, can understand their rights, responsibilities, and legal environment — and confidently engage with it.</p>
-
-            <hr>
-
-            <h3 style="color: #d35400;"><strong>Our Goals</strong></h3>
-
-            <div class="row row-cols-1 row-cols-md-2 g-4 mt-3">
-                <div class="col text-center">
-                    <img src="/static/goals1.png" alt="Goal 1" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
-                </div>
-                <div class="col text-center">
-                    <img src="/static/goals2.png" alt="Goal 2" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
-                </div>
-                <div class="col text-center">
-                    <img src="/static/goals3.png" alt="Goal 3" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
-                </div>
-                <div class="col text-center">
-                    <img src="/static/goals4.png" alt="Goal 4" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+            <!-- Goals Section -->
+            <div class="section-card">
+                <h3 class="section-title goals-title">Our Goals</h3>
+                <div class="goals-grid">
+                    <div class="goal-item">
+                        <img src="/static/goals1.png" alt="Goal 1" class="goal-image">
+                    </div>
+                    <div class="goal-item">
+                        <img src="/static/goals2.png" alt="Goal 2" class="goal-image">
+                    </div>
+                    <div class="goal-item">
+                        <img src="/static/goals3.png" alt="Goal 3" class="goal-image">
+                    </div>
+                    <div class="goal-item">
+                        <img src="/static/goals4.png" alt="Goal 4" class="goal-image">
+                    </div>
                 </div>
             </div>
 
-
-            <hr>
-
-            <h3 style="color: #c0392b;"><strong>What We Do</strong></h3>
-            <p>Through our daily social media posts, we explore legal topics that matter — from <strong>human rights</strong> to <strong>contracts</strong>, from <strong>constitutional law</strong> to trending legal issues.</p>
-            <p>Educational – covering everything from human rights to business law. <br>
-
-            Inspirational – motivating future lawyers and active legal minds. <br>
-
-            Relatable – simplifying law with real-life context, Nigerian relevance, and global perspective. <br>
-
-            Whether you're a law student, an aspiring lawyer, or a curious citizen, 
-            we’re here to help you understand your legal world — <em>one scroll at a time. </em> </p>
-
-            <hr>
-
-            <h3 style="color: #16a085;"><strong>Join the Verse</strong></h3>
-            <p>Be part of a movement where law meets lifestyle. <br>
-                💬 Follow us. <br>
-                📲 Share our posts. <br>
-                🌍 Spark change. <br>
-
-                Let’s build a legally empowered generation together.
-            </p>
-            
-            <div style="margin-top: 20px; text-align: center;">
-                <img src="/static/community.jpeg"
-                    alt="Join the Verse"
-                    style="max-width: 100%; border-radius: 8px; display: inline-block;">
+            <!-- What We Do Section -->
+            <div class="section-card">
+                <h3 class="section-title what-title">What We Do</h3>
+                <p class="section-text">Through our daily social media posts, we explore legal topics that matter — from <strong class="highlight-text">human rights</strong> to <strong class="highlight-text">contracts</strong>, from <strong class="highlight-text">constitutional law</strong> to trending legal issues.</p>
+                <p class="section-text">
+                    • <strong>Educational</strong> – covering everything from human rights to business law<br>
+                    • <strong>Inspirational</strong> – motivating future lawyers and active legal minds<br>
+                    • <strong>Relatable</strong> – simplifying law with real-life context, Nigerian relevance, and global perspective
+                </p>
+                <p class="section-text">Whether you're a law student, an aspiring lawyer, or a curious citizen, we're here to help you understand your legal world — <em>one scroll at a time.</em></p>
             </div>
 
-            <div style="text-align: center; margin-top: 10px;">
-                <strong style="font-size: 18px;">Simply Law-verse — Simplifying Law, Amplifying Justice.</strong>
-            </div>
+            <!-- Join the Verse Section -->
+            <div class="cta-section">
+                <div class="cta-content">
+                    <h3 class="section-title join-title" style="color: white; padding-left: 0;">Join the Verse</h3>
+                    <p class="section-text" style="color: white;">Be part of a movement where law meets lifestyle.</p>
+                    <div class="emoji-list">
+                        💬 Follow us<br>
+                        📲 Share our posts<br>
+                        🌍 Spark change
+                    </div>
+                    <p class="section-text" style="color: white;">Let's build a legally empowered generation together.</p>
+                    
+                    <img src="/static/community.jpeg" alt="Join the Verse" class="cta-image">
 
+                    <div class="tagline">"Simplifying Law — Amplifying Justice"</div>
+                </div>
+            </div>
         </div>
-    </div>    
+    </div>
+</div>
 
 {% endblock %}
