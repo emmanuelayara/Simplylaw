@@ -5,30 +5,35 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
-# Initialize app and extensions
-app = Flask(__name__)
+# Initialize extensions (but don't bind them yet)
+db = SQLAlchemy()
+login_manager = LoginManager()
+migrate = Migrate()
 
-# your routes, models, config, etc.
+def create_app():
+    app = Flask(__name__)
 
+    # === Configuration ===
+    UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Make sure upload folder exists
 
-# Configure upload folder and allowed extensions
-UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static', 'uploads')
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Create folder if it doesn't exist
+    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    app.config['SECRET_KEY'] = 'your-secret-key'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
+    # === Initialize Extensions ===
+    db.init_app(app)
+    login_manager.init_app(app)
+    migrate.init_app(app, db)
 
+    # === Import and register routes AFTER extensions are initialized ===
+    from routes import register_routes
+    register_routes(app)
+    
+    return app
 
-app.config['SECRET_KEY'] = 'your-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-
-
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-login_manager = LoginManager(app)
-
-# Import routes at the bottom to avoid circular import
-import routes
-
+# Run the app directly (for development)
 if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True)
-
