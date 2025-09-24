@@ -1,105 +1,710 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<div class="container mt-5 mb-5" style="max-width: 700px;">
-  <div class="card shadow-lg border-0 rounded">
-    <div class="card-body p-4">
-      <h2 class="text-center mb-4" style="color: #2c3e50;">📝 Submit an Article</h2>
+<style>
+    .submit-container {
+        background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding: 60px 0;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .submit-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(25,118,210,0.03)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        opacity: 0.6;
+    }
+    
+    .form-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .main-card {
+        background: white;
+        border-radius: 25px;
+        box-shadow: 0 25px 80px rgba(25, 118, 210, 0.15);
+        border: 1px solid rgba(25, 118, 210, 0.1);
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .main-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 6px;
+        background: linear-gradient(90deg, #1976d2, #42a5f5, #1e88e5, #1976d2);
+        background-size: 300% 100%;
+        animation: gradientShift 4s ease-in-out infinite;
+    }
+    
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+        color: white;
+        padding: 40px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+    
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    .page-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        z-index: 2;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    
+    .page-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        margin-top: 10px;
+        font-weight: 300;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .form-content {
+        padding: 50px 40px;
+    }
+    
+    .form-section {
+        margin-bottom: 35px;
+        position: relative;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #1565c0;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .form-control,
+    .form-select {
+        border: 2px solid rgba(25, 118, 210, 0.2);
+        border-radius: 12px;
+        padding: 15px 20px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: white;
+        color: #333;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.05);
+    }
+    
+    .form-control:focus,
+    .form-select:focus {
+        outline: none;
+        border-color: #1976d2;
+        box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+        transform: translateY(-1px);
+        background: #fafbff;
+    }
+    
+    .form-control::placeholder {
+        color: #999;
+        font-style: italic;
+    }
+    
+    textarea.form-control {
+        resize: vertical;
+        min-height: 200px;
+        font-family: inherit;
+        line-height: 1.6;
+    }
+    
+    /* Category Select Styling */
+    .category-wrapper {
+        position: relative;
+    }
+    
+    .category-wrapper::after {
+        content: '⚖️';
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        font-size: 1.2rem;
+        z-index: 1;
+    }
+    
+    .form-select {
+        appearance: none;
+        padding-right: 50px;
+        cursor: pointer;
+    }
+    
+    .form-select option {
+        padding: 10px;
+        background: white;
+        color: #333;
+    }
+    
+    /* File Upload Styling */
+    .file-upload-wrapper {
+        position: relative;
+        background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);
+        border: 2px dashed rgba(25, 118, 210, 0.3);
+        border-radius: 15px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .file-upload-wrapper:hover {
+        border-color: #1976d2;
+        background: linear-gradient(135deg, #e3f2fd 0%, #f8fbff 100%);
+        transform: translateY(-2px);
+    }
+    
+    .file-upload-wrapper.has-file {
+        border-color: #4caf50;
+        background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e8 100%);
+    }
+    
+    .file-upload-icon {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        display: block;
+    }
+    
+    .file-upload-text {
+        color: #666;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+    
+    .file-upload-hint {
+        color: #999;
+        font-size: 0.9rem;
+    }
+    
+    .file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        opacity: 0;
+        overflow: hidden;
+        clip: rect(0,0,0,0);
+    }
+    
+    /* Submit Button */
+    .submit-section {
+        margin-top: 50px;
+        text-align: center;
+    }
+    
+    .submit-btn {
+        background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+        color: white;
+        border: none;
+        padding: 18px 50px;
+        border-radius: 30px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 6px 20px rgba(25, 118, 210, 0.3);
+        text-transform: none;
+        min-width: 200px;
+        justify-content: center;
+    }
+    
+    .submit-btn:hover {
+        background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(25, 118, 210, 0.4);
+        color: white;
+    }
+    
+    .submit-btn:active {
+        transform: translateY(-1px);
+    }
+    
+    .submit-btn::after {
+        content: '✨';
+        font-size: 1.1rem;
+    }
+    
+    /* Loading state */
+    .submit-btn.loading {
+        opacity: 0.8;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+    
+    .submit-btn.loading::after {
+        content: '';
+        width: 18px;
+        height: 18px;
+        border: 2px solid rgba(255,255,255,0.3);
+        border-top: 2px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Form Field Icons */
+    .form-label::before {
+        font-size: 1.1rem;
+    }
+    
+    .author-label::before { content: '👤'; }
+    .email-label::before { content: '📧'; }
+    .title-label::before { content: '📝'; }
+    .content-label::before { content: '📄'; }
+    .category-label::before { content: '🏛️'; }
+    .image-label::before { content: '🖼️'; }
+    .document-label::before { content: '📎'; }
+    
+    /* Progress Indicator */
+    .progress-indicator {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 40px;
+        gap: 15px;
+    }
+    
+    .progress-step {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: rgba(25, 118, 210, 0.2);
+        transition: all 0.3s ease;
+    }
+    
+    .progress-step.active {
+        background: #1976d2;
+        transform: scale(1.2);
+    }
+    
+    /* Character Counter */
+    .char-counter {
+        text-align: right;
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 5px;
+    }
+    
+    .char-counter.warning {
+        color: #ff9800;
+    }
+    
+    .char-counter.error {
+        color: #f44336;
+    }
+    
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .submit-container {
+            padding: 30px 0;
+        }
+        
+        .form-wrapper {
+            padding: 0 10px;
+        }
+        
+        .main-card {
+            border-radius: 20px;
+        }
+        
+        .card-header {
+            padding: 30px 20px;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1rem;
+        }
+        
+        .form-content {
+            padding: 30px 20px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .form-control,
+        .form-select {
+            padding: 12px 15px;
+        }
+        
+        .file-upload-wrapper {
+            padding: 20px 15px;
+        }
+        
+        .submit-btn {
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            min-width: 180px;
+        }
+        
+        .progress-indicator {
+            margin-bottom: 30px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .page-title {
+            font-size: 1.8rem;
+        }
+        
+        .form-content {
+            padding: 25px 15px;
+        }
+        
+        .form-control,
+        .form-select {
+            padding: 10px 12px;
+            font-size: 0.95rem;
+        }
+        
+        .form-label {
+            font-size: 1rem;
+        }
+        
+        .submit-btn {
+            padding: 12px 30px;
+            font-size: 1rem;
+            min-width: 160px;
+        }
+        
+        .file-upload-icon {
+            font-size: 2rem;
+        }
+    }
+    
+    /* Success/Error Messages */
+    .alert {
+        border-radius: 12px;
+        border: none;
+        margin-bottom: 25px;
+        padding: 15px 20px;
+        font-weight: 500;
+    }
+    
+    .alert-success {
+        background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+        color: #2e7d32;
+        border-left: 4px solid #4caf50;
+    }
+    
+    .alert-danger {
+        background: linear-gradient(135deg, #ffebee 0%, #fce4ec 100%);
+        color: #c62828;
+        border-left: 4px solid #f44336;
+    }
+</style>
 
-      <form method="POST" enctype="multipart/form-data">
-
-        {{ form.hidden_tag() }}
-
-        <div class="mb-3">
-          <label for="author" class="form-label fw-bold">{{ form.author.label }}</label>
-          {{ form.author(class="form-control", placeholder="Enter your full name") }}
+<div class="submit-container">
+    <div class="form-wrapper">
+        <div class="main-card">
+            <!-- Header Section -->
+            <div class="card-header">
+                <h2 class="page-title">📝 Submit an Article</h2>
+                <p class="page-subtitle">Share your legal insights with the Simply Law-verse community</p>
+            </div>
+            
+            <!-- Form Content -->
+            <div class="form-content">
+                <!-- Progress Indicator -->
+                <div class="progress-indicator">
+                    <div class="progress-step active"></div>
+                    <div class="progress-step"></div>
+                    <div class="progress-step"></div>
+                    <div class="progress-step"></div>
+                </div>
+                
+                <form method="POST" enctype="multipart/form-data" id="articleForm">
+                    {{ form.hidden_tag() }}
+                    
+                    <!-- Author Field -->
+                    <div class="form-section">
+                        <label class="form-label author-label">{{ form.author.label }}</label>
+                        {{ form.author(class="form-control", placeholder="Enter your full name") }}
+                    </div>
+                    
+                    <!-- Email Field -->
+                    <div class="form-section">
+                        <label class="form-label email-label">{{ form.email.label }}</label>
+                        {{ form.email(class="form-control", placeholder="Enter your email address") }}
+                    </div>
+                    
+                    <!-- Title Field -->
+                    <div class="form-section">
+                        <label class="form-label title-label">{{ form.title.label }}</label>
+                        {{ form.title(class="form-control", placeholder="Title of your article", maxlength="200", oninput="updateCharCount(this, 'titleCount', 200)") }}
+                        <div class="char-counter" id="titleCount">0 / 200 characters</div>
+                    </div>
+                    
+                    <!-- Content Field -->
+                    <div class="form-section">
+                        <label class="form-label content-label">{{ form.content.label }}</label>
+                        {{ form.content(class="form-control", rows="12", placeholder="Write your article here... Share your legal insights, analysis, or commentary.", oninput="updateCharCount(this, 'contentCount', 5000)") }}
+                        <div class="char-counter" id="contentCount">0 / 5000 characters</div>
+                    </div>
+                    
+                    <!-- Category Field -->
+                    <div class="form-section">
+                        <label class="form-label category-label">Category</label>
+                        <div class="category-wrapper">
+                            <select class="form-select" name="category" required onchange="updateProgress()">
+                                <option value="">Select a Legal Category</option>
+                                <option value="Criminal Law">Criminal Law</option>
+                                <option value="Family Law">Family Law</option>
+                                <option value="Constitutional Law">Constitutional Law</option>
+                                <option value="Tech Law">Tech Law</option>
+                                <option value="Property Law">Property Law</option>
+                                <option value="Administrative Law">Administrative Law</option>
+                                <option value="International Law">International Law</option>
+                                <option value="Contract Law">Contract Law</option>
+                                <option value="Tort Law">Tort Law</option>
+                                <option value="Succession Law">Succession Law</option>
+                                <option value="Corporate Law">Corporate Law</option>
+                                <option value="Commercial Law">Commercial Law</option>
+                                <option value="Banking and Finance Law">Banking and Finance Law</option>
+                                <option value="Securities Law">Securities Law</option>
+                                <option value="Civil Litigation">Civil Litigation</option>
+                                <option value="Criminal Litigation">Criminal Litigation</option>
+                                <option value="Alternative Dispute Resolution">Alternative Dispute Resolution</option>
+                                <option value="Environmental Law">Environmental Law</option>
+                                <option value="Energy Law">Energy Law</option>
+                                <option value="Intellectual Property Law">Intellectual Property Law</option>
+                                <option value="Copyright Law">Copyright Law</option>
+                                <option value="Patent Law">Patent Law</option>
+                                <option value="Trademark Law">Trademark Law</option>
+                                <option value="Trade Secrets Law">Trade Secrets Law</option>
+                                <option value="Labour and Employment Law">Labour and Employment Law</option>
+                                <option value="Human Rights Law">Human Rights Law</option>
+                                <option value="Health and Medical Law">Health and Medical Law</option>
+                                <option value="Real Estate Law">Real Estate Law</option>
+                                <option value="Transportation Law">Transportation Law</option>
+                                <option value="Cyber Law">Cyber Law</option>
+                                <option value="Data Protection and Privacy Law">Data Protection and Privacy Law</option>
+                                <option value="Space Law">Space Law</option>
+                                <option value="Sports and Entertainment Law">Sports and Entertainment Law</option>
+                                <option value="Media and Communications Law">Media and Communications Law</option>
+                                <option value="Education Law">Education Law</option>
+                                <option value="Agricultural Law">Agricultural Law</option>
+                                <option value="Animal Law">Animal Law</option>
+                                <option value="Maritime and Admiralty Law">Maritime and Admiralty Law</option>
+                                <option value="Immigration Law">Immigration Law</option>
+                                <option value="Tax Law">Tax Law</option>
+                                <option value="Military Law">Military Law</option>
+                                <option value="Bankruptcy Law">Bankruptcy Law</option>
+                                <option value="Consumer Protection Law">Consumer Protection Law</option>
+                                <option value="Public Interest Law">Public Interest Law</option>
+                                <option value="Customary and Indigenous Law">Customary and Indigenous Law</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Cover Image Field -->
+                    <div class="form-section">
+                        <label class="form-label image-label">{{ form.cover_image.label }}</label>
+                        <div class="file-upload-wrapper" onclick="document.getElementById('cover_image').click()">
+                            <span class="file-upload-icon">🖼️</span>
+                            <div class="file-upload-text">Click to select cover image</div>
+                            <div class="file-upload-hint">PNG, JPG, JPEG up to 10MB</div>
+                            {{ form.cover_image(class="file-input", id="cover_image", onchange="handleFileUpload(this, 'image')") }}
+                        </div>
+                        <div id="imagePreview" style="display: none; margin-top: 15px;"></div>
+                    </div>
+                    
+                    <!-- Document Field -->
+                    <div class="form-section">
+                        <label class="form-label document-label">Upload Article Document (Optional)</label>
+                        <div class="file-upload-wrapper" onclick="document.getElementById('document').click()">
+                            <span class="file-upload-icon">📎</span>
+                            <div class="file-upload-text">Click to select document</div>
+                            <div class="file-upload-hint">PDF, DOC, DOCX up to 20MB</div>
+                            <input type="file" name="document" class="file-input" id="document" accept=".pdf,.doc,.docx" onchange="handleFileUpload(this, 'document')">
+                        </div>
+                        <div id="documentPreview" style="display: none; margin-top: 15px;"></div>
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="submit-section">
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            Submit Article
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div class="mb-3">
-          <label for="email" class="form-label fw-bold">{{ form.email.label }}</label>
-          {{ form.email(class="form-control", placeholder="Enter your email address") }}
-        </div>
-
-        <div class="mb-3">
-          <label for="title" class="form-label fw-bold">{{ form.title.label }}</label>
-          {{ form.title(class="form-control", placeholder="Title of your article") }}
-        </div>
-
-        <div class="mb-3">
-          <label for="content" class="form-label fw-bold">{{ form.content.label }}</label>
-          {{ form.content(class="form-control", rows="10", placeholder="Write your article here...") }}
-        </div>
-
-        <div class="mb-3">
-          <label for="category" class="form-label">Category</label>
-          <select class="form-select" name="category" required>
-            <option value="">Select a Category</option>
-            <option value="Criminal Law">Criminal Law</option>
-            <option value="Family Law">Family Law</option>
-            <option value="Constitutional Law">Constitutional Law</option>
-            <option value="Tech Law">Tech Law</option>
-            <option value="Property Law">Property Law</option>
-            <option value="Administrative Law">Administrative Law</option>
-            <option value="International Law">International Law</option>
-            <option value="Contract Law">Contract Law</option>
-            <option value="Tort Law">Tort Law</option>
-            <option value="Succession Law">Succession Law</option>
-            <option value="Corporate Law">Corporate Law</option>
-            <option value="Commercial Law">Commercial Law</option>
-            <option value="Banking and Finance Law">Banking and Finance Law</option>
-            <option value="Securities Law">Securities Law</option>
-            <option value="Civil Litigation">Civil Litigation</option>
-            <option value="Criminal Litigation">Criminal Litigation</option>
-            <option value="Alternative Dispute Resolution">Alternative Dispute Resolution</option>
-            <option value="Environmental Law">Environmental Law</option>
-            <option value="Energy Law">Energy Law</option>
-            <option value="Intellectual Property Law">Intellectual Property Law</option>
-            <option value="Copyright Law">Copyright Law</option>
-            <option value="Patent Law">Patent Law</option>
-            <option value="Trademark Law">Trademark Law</option>
-            <option value="Trade Secrets Law">Trade Secrets Law</option>
-            <option value="Labour and Employment Law">Labour and Employment Law</option>
-            <option value="Human Rights Law">Human Rights Law</option>
-            <option value="Health and Medical Law">Health and Medical Law</option>
-            <option value="Real Estate Law">Real Estate Law</option>
-            <option value="Transportation Law">Transportation Law</option>
-            <option value="Cyber Law">Cyber Law</option>
-            <option value="Data Protection and Privacy Law">Data Protection and Privacy Law</option>
-            <option value="Space Law">Space Law</option>
-            <option value="Sports and Entertainment Law">Sports and Entertainment Law</option>
-            <option value="Media and Communications Law">Media and Communications Law</option>
-            <option value="Education Law">Education Law</option>
-            <option value="Agricultural Law">Agricultural Law</option>
-            <option value="Animal Law">Animal Law</option>
-            <option value="Maritime and Admiralty Law">Maritime and Admiralty Law</option>
-            <option value="Immigration Law">Immigration Law</option>
-            <option value="Tax Law">Tax Law</option>
-            <option value="Military Law">Military Law</option>
-            <option value="Bankruptcy Law">Bankruptcy Law</option>
-            <option value="Consumer Protection Law">Consumer Protection Law</option>
-            <option value="Public Interest Law">Public Interest Law</option>
-            <option value="Customary and Indigenous Law">Customary and Indigenous Law</option>
-          </select>
-        </div>
-
-
-        <div class="mb-3">
-          {{ form.cover_image.label }}<br>
-          {{ form.cover_image() }}<br><br>
-        </div>
-
-        <div class="mb-3">
-          <label for="document" class="form-label fw-bold">Upload Article (optional, PDF/Word)</label>
-          <input type="file" name="document" class="form-control" accept=".pdf,.doc,.docx">
-        </div>
-
-        <div class="d-grid mt-4">
-          <button type="submit" class="btn btn-primary btn-lg">📤 Submit Article</button>
-        </div>
-      </form>
     </div>
-  </div>
 </div>
 
-{% endblock %}
+<script>
+// Character count functionality
+function updateCharCount(element, counterId, maxLength) {
+    const counter = document.getElementById(counterId);
+    const current = element.value.length;
+    counter.textContent = `${current} / ${maxLength} characters`;
+    
+    if (current > maxLength * 0.9) {
+        counter.classList.add('warning');
+    } else {
+        counter.classList.remove('warning');
+    }
+    
+    if (current > maxLength) {
+        counter.classList.add('error');
+    } else {
+        counter.classList.remove('error');
+    }
+    
+    updateProgress();
+}
 
+// File upload handling
+function handleFileUpload(input, type) {
+    const wrapper = input.closest('.file-upload-wrapper');
+    const previewId = type === 'image' ? 'imagePreview' : 'documentPreview';
+    const preview = document.getElementById(previewId);
+    
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        wrapper.classList.add('has-file');
+        
+        // Update wrapper text
+        const textEl = wrapper.querySelector('.file-upload-text');
+        textEl.textContent = `Selected: ${file.name}`;
+        
+        // Show preview for images
+        if (type === 'image' && file.type.startsWith('image/')) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 200px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">`;
+                preview.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else if (type === 'document') {
+            preview.innerHTML = `<div style="padding: 10px; background: #f0f8ff; border-radius: 8px; color: #1565c0; font-weight: 500;">📄 ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)</div>`;
+            preview.style.display = 'block';
+        }
+    } else {
+        wrapper.classList.remove('has-file');
+        const textEl = wrapper.querySelector('.file-upload-text');
+        textEl.textContent = type === 'image' ? 'Click to select cover image' : 'Click to select document';
+        preview.style.display = 'none';
+    }
+    
+    updateProgress();
+}
+
+// Progress indicator
+function updateProgress() {
+    const steps = document.querySelectorAll('.progress-step');
+    const author = document.querySelector('input[name="author"]').value;
+    const email = document.querySelector('input[name="email"]').value;
+    const title = document.querySelector('input[name="title"]').value;
+    const content = document.querySelector('textarea[name="content"]').value;
+    const category = document.querySelector('select[name="category"]').value;
+    
+    let completed = 0;
+    
+    if (author && email) completed++;
+    if (title) completed++;
+    if (content && content.length > 50) completed++;
+    if (category) completed++;
+    
+    steps.forEach((step, index) => {
+        if (index < completed) {
+            step.classList.add('active');
+        } else {
+            step.classList.remove('active');
+        }
+    });
+}
+
+// Form submission handling
+document.getElementById('articleForm').addEventListener('submit', function(e) {
+    const submitBtn = document.getElementById('submitBtn');
+    submitBtn.classList.add('loading');
+    submitBtn.innerHTML = 'Submitting Article...';
+    
+    // Reset after timeout (in case of errors)
+    setTimeout(() => {
+        submitBtn.classList.remove('loading');
+        submitBtn.innerHTML = 'Submit Article ✨';
+    }, 10000);
+});
+
+// Initialize progress on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners for progress tracking
+    const inputs = document.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+        input.addEventListener('input', updateProgress);
+        input.addEventListener('change', updateProgress);
+    });
+    
+    // Initial progress update
+    updateProgress();
+    
+    // Add smooth entrance animation
+    const container = document.querySelector('.submit-container');
+    container.style.opacity = '0';
+    container.style.transform = 'translateY(30px)';
+    
+    setTimeout(() => {
+        container.style.transition = 'all 0.8s ease';
+        container.style.opacity = '1';
+        container.style.transform = 'translateY(0)';
+    }, 100);
+});
+</script>
+
+{% endblock %}
