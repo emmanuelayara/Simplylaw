@@ -1,153 +1,627 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<div class="container mt-4">
-  <h1 class="text-center mb-5 text-primary"><em>Welcome to the Lawverse</em></h1>
-          <figcaption class="blockquote-footer text-center">
-          Simply Lawverse; <b>Simplifying Law,</b> <cite title="Source Title">  Amplifying Justice.</cite>
-        </figcaption> <br>
+<style>
+/* Custom CSS for modern design */
+:root {
+  --primary-blue: #2563eb;
+  --light-blue: #3b82f6;
+  --dark-blue: #1e40af;
+  --accent-blue: #60a5fa;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-600: #4b5563;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
 
-    <div class="mb-4">
-      <form method="get" action="{{ url_for('home') }}">
-        <div class="row g-2 align-items-center">
-          <div class="col-auto">
-            <label for="category" class="form-label mb-0 fw-bold">Filter by Category:</label>
-          </div>
-          <div class="col-auto">
-            <select class="form-select form-select-sm" name="category" onchange="this.form.submit()">
-              <option value="">All</option>
-              {% for cat in categories %}
-                <option value="{{ cat[0] }}" {% if selected_category == cat[0] %}selected{% endif %}>{{ cat[0] }}</option>
-              {% endfor %}
-            </select>
-          </div>
-        </div>
-      </form>
+.hero-section {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--light-blue) 100%);
+  color: white;
+  padding: 4rem 0 3rem;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="25" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+  opacity: 0.3;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  opacity: 0.9;
+  margin-bottom: 0;
+}
+
+.search-filter-section {
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-lg);
+  padding: 2rem;
+  margin: -2rem 1rem 3rem;
+  position: relative;
+  z-index: 10;
+}
+
+.filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.search-container {
+  flex: 1;
+  min-width: 300px;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  outline: none;
+}
+
+.search-btn {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background: var(--dark-blue);
+  transform: translateY(-1px);
+}
+
+.category-select {
+  padding: 0.75rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 12px;
+  font-size: 1rem;
+  background: white;
+  min-width: 200px;
+  transition: border-color 0.3s ease;
+}
+
+.category-select:focus {
+  border-color: var(--primary-blue);
+  outline: none;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--dark-blue);
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+  border-radius: 2px;
+}
+
+.trending-section {
+  margin-bottom: 4rem;
+}
+
+.trending-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid var(--gray-100);
+}
+
+.trending-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+}
+
+.trending-card-body {
+  padding: 1.5rem;
+}
+
+.trending-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--dark-blue);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.trending-title a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.trending-title a:hover {
+  color: var(--primary-blue);
+}
+
+.trending-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.trending-meta i {
+  color: var(--primary-blue);
+}
+
+.trending-content {
+  color: var(--gray-600);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.trending-footer {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.read-more-btn {
+  background: transparent;
+  color: var(--primary-blue);
+  border: 2px solid var(--primary-blue);
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.read-more-btn:hover {
+  background: var(--primary-blue);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.articles-section {
+  background: var(--gray-100);
+  padding: 4rem 0;
+  margin: 0 -15px;
+}
+
+.article-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  height: 100%;
+  border: none;
+}
+
+.article-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-xl);
+}
+
+.article-header {
+  background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+  color: white;
+  padding: 1.5rem;
+  border-radius: 0;
+}
+
+.article-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.article-title a {
+  color: white;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.article-title a:hover {
+  opacity: 0.9;
+}
+
+.article-author {
+  font-size: 0.875rem;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.article-body {
+  padding: 2rem;
+}
+
+.cover-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.article-content {
+  color: var(--gray-600);
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.pagination-container {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+  padding: 1rem;
+  gap: 0.5rem;
+}
+
+.page-item {
+  border: none;
+}
+
+.page-link {
+  border: none;
+  color: var(--gray-600);
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.page-link:hover {
+  background: var(--primary-blue);
+  color: white;
+}
+
+.page-item.active .page-link {
+  background: var(--primary-blue);
+  color: white;
+}
+
+.page-item.disabled .page-link {
+  color: var(--gray-200);
+  cursor: not-allowed;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--gray-600);
+}
+
+.empty-state i {
+  font-size: 4rem;
+  color: var(--accent-blue);
+  margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+  color: var(--dark-blue);
+  margin-bottom: 1rem;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .search-filter-section {
+    margin: -1rem 0.5rem 2rem;
+    padding: 1.5rem;
+  }
+  
+  .filter-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .search-container {
+    min-width: auto;
+    flex-direction: column;
+  }
+  
+  .search-btn {
+    width: 100%;
+  }
+  
+  .category-select {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .trending-card-body,
+  .article-body {
+    padding: 1.25rem;
+  }
+  
+  .articles-section {
+    margin: 0;
+    padding: 3rem 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-section {
+    padding: 3rem 0 2rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.75rem;
+  }
+  
+  .pagination {
+    padding: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+  <div class="container hero-content">
+    <div class="text-center">
+      <h1 class="hero-title">Welcome to the Lawverse</h1>
+      <p class="hero-subtitle">
+        Simply Lawverse; <strong>Simplifying Law,</strong> Amplifying Justice.
+      </p>
     </div>
+  </div>
+</div>
 
-    <form method="get" action="{{ url_for('home') }}" class="search-form">
-      <style>.search-form {
-              margin-bottom: 20px;
-          }
-          .search-form input[type="text"] {
-              padding: 8px;
-              width: 250px;
-          }
-          .search-form button {
-              padding: 8px 12px;
-          }
-          .card-title a:hover {
-              color: #d35400;
-              text-decoration: underline;
-          }
-          .card:hover {
-              transform: translateY(-5px);
-              box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-          }
-
-      </style>
-        <input type="text" name="search" placeholder="Search articles..." value="{{ search_query }}">
+<!-- Search and Filter Section -->
+<div class="container">
+  <div class="search-filter-section">
+    <form method="get" action="{{ url_for('home') }}" class="filter-form">
+      <div class="d-flex align-items-center gap-2">
+        <label for="category" class="form-label mb-0 fw-bold text-primary">
+          <i class="fas fa-filter me-1"></i>Filter:
+        </label>
+        <select class="category-select" name="category" onchange="this.form.submit()">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+            <option value="{{ cat[0] }}" {% if selected_category == cat[0] %}selected{% endif %}>
+              {{ cat[0] }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+      
+      <div class="search-container">
+        <input type="text" class="search-input" name="search" 
+               placeholder="🔍 Search articles..." value="{{ search_query }}">
         {% if selected_category %}
-            <input type="hidden" name="category" value="{{ selected_category }}">
+          <input type="hidden" name="category" value="{{ selected_category }}">
         {% endif %}
-        <button type="submit" class="btn btn-sm btn-outline-primary">Search</button>
+        <button type="submit" class="search-btn">
+          <i class="fas fa-search me-1"></i>Search
+        </button>
+      </div>
     </form>
+  </div>
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4" style="color: #e67e22;">
-        <strong>🔥 Trending Topics</strong>
+  <!-- Trending Section -->
+  {% if trending_articles %}
+  <div class="trending-section">
+    <h2 class="section-title">
+      <i class="fas fa-fire text-warning me-2"></i>Trending Topics
     </h2>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        {% for article in trending_articles %}
-        <div class="col">
-            <div class="card h-100 shadow-sm border-0" style="transition: transform 0.3s;">
-                <div class="card-body">
-                    <h5 class="card-title mb-2" style="color: #2c3e50;">
-                        <a href="{{ url_for('view_article', article_id=article.id) }}" class="text-decoration-none" style="color: inherit;">
-                            {{ article.title }}
-                        </a>
-                    </h5>
-                    <p class="text-muted small mb-1">
-                        <i class="fas fa-user"></i> {{ article.author }} 
-                        &nbsp;&nbsp;|&nbsp;&nbsp;
-                        <i class="fas fa-heart text-danger"></i> {{ article.likes }} Likes
-                    </p>
-                    <p class="card-text" style="font-size: 0.95rem; color: #555;">
-                        {{ article.content[:120] }}...
-                    </p>
-                </div>
-                <div class="card-footer bg-transparent border-0 text-end">
-                    <a href="{{ url_for('view_article', article_id=article.id) }}" class="btn btn-sm btn-outline-primary">Read More</a>
-                </div>
+    
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      {% for article in trending_articles %}
+      <div class="col">
+        <div class="trending-card">
+          <div class="trending-card-body">
+            <h5 class="trending-title">
+              <a href="{{ url_for('view_article', article_id=article.id) }}">
+                {{ article.title }}
+              </a>
+            </h5>
+            <div class="trending-meta">
+              <span>
+                <i class="fas fa-user"></i> {{ article.author }}
+              </span>
+              <span>
+                <i class="fas fa-heart text-danger"></i> {{ article.likes or 0 }} Likes
+              </span>
             </div>
-        </div>
-        {% endfor %}
-    </div>
-</div><br><br>
-
-
-  {% if articles %}
-    <div class="row">
-          <h2 class="mb-4 text-center" style="color: #278cdf;"><strong>New Articles</strong></h2>
-      {% for article in articles %}
-        <div class="col-md-6 mb-4">
-          <div class="card h-100 shadow-sm">
-            <div class="card-header bg-primary text-white">
-              <a href="{{ url_for('read_more', article_id=article.id) }}"> <h5 class="card-title mb-0 text-white">{{ article.title }}</h5></a>
-              <small>by <em>{{ article.author }}</em></small>
-            </div>
-              <div class="card-body">
-                {% if article.cover_image %}
-                  <img src="{{ url_for('static', filename='uploads/' + article.cover_image) }}" 
-                      class="img-fluid mb-3 rounded cover-image" 
-                      alt="Cover Image for {{ article.title }}">
-                {% endif %}
-                
-                <p class="card-text">
-                  {{ article.content[:300] }}{% if article.content|length > 300 %}...{% endif %}
-                </p>
-                <a href="{{ url_for('read_more', article_id=article.id) }}" class="btn btn-sm btn-outline-primary">Read More</a>
-              </div>
+            <p class="trending-content">
+              {{ article.content[:120] }}...
+            </p>
+          </div>
+          <div class="trending-footer">
+            <a href="{{ url_for('view_article', article_id=article.id) }}" class="read-more-btn">
+              Read More <i class="fas fa-arrow-right ms-1"></i>
+            </a>
           </div>
         </div>
+      </div>
       {% endfor %}
     </div>
-  {% else %}
-    <p class="text-muted text-center">No approved articles yet. Please check back soon.</p>
+  </div>
   {% endif %}
 </div>
 
-<!-- Pagination Controls -->
-<nav aria-label="Page navigation">
-  <ul class="pagination">
-    {% if articles.has_prev %}
-      <li class="page-item">
-        <a class="page-link" href="{{ url_for('home', page=articles.prev_num) }}">Previous</a>
-      </li>
+<!-- Articles Section -->
+<div class="articles-section">
+  <div class="container">
+    {% if articles %}
+      <h2 class="section-title" style="color: white;">
+        <i class="fas fa-newspaper me-2"></i>Latest Articles
+      </h2>
+      
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for article in articles %}
+        <div class="col">
+          <div class="article-card">
+            <div class="article-header">
+              <h5 class="article-title">
+                <a href="{{ url_for('read_more', article_id=article.id) }}">
+                  {{ article.title }}
+                </a>
+              </h5>
+              <p class="article-author">
+                <i class="fas fa-pen-fancy me-1"></i>by {{ article.author }}
+              </p>
+            </div>
+            
+            <div class="article-body">
+              {% if article.cover_image %}
+                <img src="{{ url_for('static', filename='uploads/' + article.cover_image) }}" 
+                     class="cover-image" 
+                     alt="Cover Image for {{ article.title }}">
+              {% endif %}
+              
+              <p class="article-content">
+                {{ article.content[:300] }}{% if article.content|length > 300 %}...{% endif %}
+              </p>
+              
+              <a href="{{ url_for('read_more', article_id=article.id) }}" class="read-more-btn">
+                Read Full Article <i class="fas fa-arrow-right ms-1"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
     {% else %}
-      <li class="page-item disabled"><span class="page-link">Previous</span></li>
+      <div class="empty-state">
+        <i class="fas fa-file-alt"></i>
+        <h3>No Articles Found</h3>
+        <p>No approved articles available at the moment. Please check back soon for fresh content!</p>
+      </div>
     {% endif %}
+  </div>
+</div>
 
-    {% for page_num in articles.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
-      {% if page_num %}
-        {% if page_num == articles.page %}
-          <li class="page-item active"><span class="page-link">{{ page_num }}</span></li>
+<!-- Pagination -->
+{% if articles and articles.pages > 1 %}
+<div class="container">
+  <div class="pagination-container">
+    <nav aria-label="Page navigation">
+      <ul class="pagination">
+        {% if articles.has_prev %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('home', page=articles.prev_num, category=selected_category, search=search_query) }}">
+              <i class="fas fa-chevron-left me-1"></i>Previous
+            </a>
+          </li>
         {% else %}
-          <li class="page-item"><a class="page-link" href="{{ url_for('home', page=page_num) }}">{{ page_num }}</a></li>
+          <li class="page-item disabled">
+            <span class="page-link">
+              <i class="fas fa-chevron-left me-1"></i>Previous
+            </span>
+          </li>
         {% endif %}
-      {% else %}
-        <li class="page-item disabled"><span class="page-link">…</span></li>
-      {% endif %}
-    {% endfor %}
 
-    {% if articles.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="{{ url_for('home', page=articles.next_num) }}">Next</a>
-      </li>
-    {% else %}
-      <li class="page-item disabled"><span class="page-link">Next</span></li>
-    {% endif %}
-  </ul>
-</nav>
+        {% for page_num in articles.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+          {% if page_num %}
+            {% if page_num == articles.page %}
+              <li class="page-item active">
+                <span class="page-link">{{ page_num }}</span>
+              </li>
+            {% else %}
+              <li class="page-item">
+                <a class="page-link" href="{{ url_for('home', page=page_num, category=selected_category, search=search_query) }}">
+                  {{ page_num }}
+                </a>
+              </li>
+            {% endif %}
+          {% else %}
+            <li class="page-item disabled">
+              <span class="page-link">…</span>
+            </li>
+          {% endif %}
+        {% endfor %}
+
+        {% if articles.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('home', page=articles.next_num, category=selected_category, search=search_query) }}">
+              Next<i class="fas fa-chevron-right ms-1"></i>
+            </a>
+          </li>
+        {% else %}
+          <li class="page-item disabled">
+            <span class="page-link">
+              Next<i class="fas fa-chevron-right ms-1"></i>
+            </span>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</div>
+{% endif %}
 
 {% endblock %}
