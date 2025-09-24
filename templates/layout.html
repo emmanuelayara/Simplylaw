@@ -9,86 +9,488 @@
     <link 
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
         rel="stylesheet">
-        <link rel="stylesheet" 
+    <link rel="stylesheet" 
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-        <!-- Inside <head> in layout.html -->
-        <link rel="stylesheet" 
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
     <!-- Custom Styling -->
     <style>
-        body {
-            background-color: #f4f6f8;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --primary-blue: #2563eb;
+            --secondary-blue: #3b82f6;
+            --dark-blue: #1e40af;
+            --light-blue: #60a5fa;
+            --accent-blue: #93c5fd;
+            --navy-blue: #1e3a8a;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Modern Navbar Styles */
         .navbar {
-            background: linear-gradient(to right, #667eea, #764ba2);
-            padding: 0.8rem 1rem;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 50%, var(--dark-blue) 100%);
+            padding: 1rem 0;
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 1050;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow-lg);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .navbar-brand, .nav-link {
-            color: #fff !important;
-            font-weight: 500;
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.05);
+            pointer-events: none;
         }
 
-        .nav-link {
-            transition: color 0.3s ease-in-out;
+        .navbar-container {
+            position: relative;
+            z-index: 2;
         }
 
-        .nav-link:hover {
-            color: #ffec99 !important;
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            color: var(--white) !important;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.5rem 0;
+        }
+
+        .navbar-brand:hover {
+            color: var(--accent-blue) !important;
+            transform: translateY(-1px);
+        }
+
+        .brand-logo {
+            height: 50px;
+            width: 80px;
+            border-radius: 12px;
+            margin-right: 12px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .brand-text {
+            background: linear-gradient(135deg, var(--white), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -0.025em;
         }
 
         .navbar-toggler {
-            border: none;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-toggler:hover {
+            border-color: var(--accent-blue);
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.3);
         }
 
         .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 30 30'%3e%3cpath d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23ffffff' viewBox='0 0 30 30'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='m4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            width: 1.5em;
+            height: 1.5em;
         }
 
-footer a {
-    transition: opacity 0.3s ease-in-out;
-}
+        .navbar-collapse {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            margin-top: 1rem;
+            padding: 1rem;
+            backdrop-filter: blur(10px);
+        }
 
-footer a:hover {
-    opacity: 1;
-    text-decoration: underline;
-}
+        .navbar-nav {
+            gap: 0.5rem;
+        }
+
+        .nav-item {
+            position: relative;
+        }
+
+        .nav-link {
+            color: var(--white) !important;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 0.75rem 1.25rem !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-blue) !important;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-link:active {
+            transform: translateY(0);
+        }
+
+        .navbar-text {
+            color: var(--accent-blue) !important;
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-text::before {
+            content: '👋';
+            font-size: 1rem;
+        }
+
+        /* Flash Messages */
+        .flash-container {
+            margin-top: 1rem;
+            position: relative;
+            z-index: 1000;
+        }
 
         .alert {
-            border-radius: 8px;
+            border-radius: 12px;
+            border: none;
+            box-shadow: var(--shadow-md);
+            padding: 1rem 1.5rem;
+            font-weight: 500;
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, var(--light-blue), var(--primary-blue));
+            color: white;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--navy-blue) 50%, var(--primary-blue) 100%);
+            color: var(--white);
+            margin-top: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            pointer-events: none;
+        }
+
+        .footer-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem 0;
+        }
+
+        .footer-text {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .footer-links {
+            margin-top: 1rem;
+        }
+
+        .footer-link {
+            color: var(--accent-blue) !important;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            background: var(--white);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .footer-link:hover {
+            color: var(--white) !important;
+            transform: translateY(-1px);
+        }
+
+        .footer-link:hover::after {
+            width: 100%;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 992px) {
+            .navbar-collapse {
+                background: rgba(30, 64, 175, 0.95);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                box-shadow: var(--shadow-xl);
+                margin-top: 1rem;
+            }
+
+            .navbar-nav {
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+
+            .nav-link {
+                text-align: center;
+                margin: 0.25rem 0;
+            }
+
+            .navbar-text {
+                text-align: center;
+                margin: 0.5rem 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0.75rem 0;
+            }
+
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+
+            .brand-logo {
+                height: 40px;
+                width: 65px;
+                margin-right: 8px;
+            }
+
+            .nav-link {
+                padding: 0.5rem 1rem !important;
+                font-size: 0.95rem;
+            }
+
+            .navbar-text {
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+
+            .brand-logo {
+                height: 35px;
+                width: 55px;
+            }
+
+            .footer-content {
+                padding: 1.5rem 0;
+            }
+
+            .footer-text {
+                font-size: 0.9rem;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+            }
+        }
+
+        /* Loading Animation */
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        /* Accessibility Improvements */
+        .nav-link:focus,
+        .navbar-toggler:focus {
+            outline: 2px solid var(--accent-blue);
+            outline-offset: 2px;
+        }
+
+        /* Print Styles */
+        @media print {
+            .navbar,
+            .footer {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg shadow-sm">
-        <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="/">
-                <img src="/static/simplylawverse.png" alt="Logo" style="height: 50px; width: 80px; border-radius: 10px; margin-right: 10px;">
+    <!-- Modern Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container navbar-container">
+            <a class="navbar-brand" href="/" aria-label="Simply Law-verse Home">
+                <img src="/static/simplylawverse.png" alt="Simply Law-verse Logo" class="brand-logo">
+                <span class="brand-text d-none d-sm-inline">Simply Law-verse</span>
             </a>
-            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-
+                <ul class="navbar-nav ms-auto">
                     {% if current_user.is_authenticated and current_user.is_admin %}
-                        <span class="navbar-text nav-link">Welcome, {{ current_user.username }}!</span>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('view_messages') }}"> Messages</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_logout') }}">Logout</a></li>
+                        <li class="nav-item">
+                            <span class="navbar-text">
+                                Welcome, {{ current_user.username }}!
+                            </span>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_dashboard') }}" aria-label="Admin Dashboard">
+                                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('view_messages') }}" aria-label="View Messages">
+                                <i class="fas fa-envelope me-1"></i>Messages
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_logout') }}" aria-label="Logout">
+                                <i class="fas fa-sign-out-alt me-1"></i>Logout
+                            </a>
+                        </li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_login') }}">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register_admin') }}">Register Admin</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('submit_article') }}">Submit Article</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_login') }}" aria-label="Admin Login">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('register_admin') }}" aria-label="Register as Admin">
+                                <i class="fas fa-user-plus me-1"></i>Register Admin
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('about') }}" aria-label="About Us">
+                                <i class="fas fa-info-circle me-1"></i>About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('contact') }}" aria-label="Contact Us">
+                                <i class="fas fa-phone me-1"></i>Contact
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('submit_article') }}" aria-label="Submit Article">
+                                <i class="fas fa-plus-circle me-1"></i>Submit Article
+                            </a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
@@ -96,11 +498,12 @@ footer a:hover {
     </nav>
 
     <!-- Flash Messages -->
-    <div class="container mt-4">
+    <div class="container flash-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
                     <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -110,35 +513,85 @@ footer a:hover {
     </div>
 
     <!-- Main Content -->
-    <div class="container my-4">
+    <main class="container my-4">
         {% block content %}{% endblock %}
-    </div>
+    </main>
 
-    <!-- Footer -->
-<footer class="text-center text-white" style="background: linear-gradient(to right, #667eea, #764ba2);">
-    <div class="container py-4">
-        <p class="mb-1">&copy; {{ current_year or '2025' }} <strong>Simply Law-verse</strong>. All rights reserved.</p>
-        <p class="mb-0">
-            <a href="/privacy-policy" class="text-white text-decoration-none me-2" style="opacity: 0.9;">Privacy Policy</a> |
-            <a href="/terms" class="text-white text-decoration-none ms-2" style="opacity: 0.9;">Terms & Conditions</a>
-        </p>
-    </div>
-</footer>
-
+    <!-- Modern Footer -->
+    <footer class="footer text-center">
+        <div class="footer-content">
+            <div class="container">
+                <p class="footer-text mb-2">
+                    &copy; {{ current_year or '2025' }} <strong>Simply Law-verse</strong>. All rights reserved.
+                </p>
+                <div class="footer-links d-flex justify-content-center flex-wrap gap-4">
+                    <a href="/privacy-policy" class="footer-link">
+                        <i class="fas fa-shield-alt me-1"></i>Privacy Policy
+                    </a>
+                    <span class="text-white-50">|</span>
+                    <a href="/terms" class="footer-link">
+                        <i class="fas fa-file-contract me-1"></i>Terms & Conditions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+        // Copy link functionality
         function copyLink(link) {
-        navigator.clipboard.writeText(link).then(function() {
-            const msg = document.getElementById('copyMsg');
-            msg.classList.remove('d-none');
-            setTimeout(() => msg.classList.add('d-none'), 2000);
-        }, function(err) {
-            alert('Failed to copy link: ', err);
-        });
+            navigator.clipboard.writeText(link).then(function() {
+                const msg = document.getElementById('copyMsg');
+                if (msg) {
+                    msg.classList.remove('d-none');
+                    setTimeout(() => msg.classList.add('d-none'), 2000);
+                }
+            }, function(err) {
+                alert('Failed to copy link: ' + err);
+            });
         }
 
+        // Navbar scroll effect
+        let lastScrollTop = 0;
+        const navbar = document.querySelector('.navbar');
+        
+        window.addEventListener('scroll', function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                // Scrolling down
+                navbar.style.transform = 'translateY(-100%)';
+            } else {
+                // Scrolling up
+                navbar.style.transform = 'translateY(0)';
+            }
+            
+            lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        }, false);
+
+        // Add loading shimmer effect to brand logo
+        document.addEventListener('DOMContentLoaded', function() {
+            const brandLogo = document.querySelector('.brand-logo');
+            if (brandLogo) {
+                brandLogo.addEventListener('load', function() {
+                    this.style.opacity = '1';
+                });
+            }
+        });
+
+        // Mobile menu auto-close on link click
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const navbarCollapse = document.querySelector('.navbar-collapse');
+                if (navbarCollapse.classList.contains('show')) {
+                    const bsCollapse = new bootstrap.Collapse(navbarCollapse);
+                    bsCollapse.hide();
+                }
+            });
+        });
     </script>
 
 </body>

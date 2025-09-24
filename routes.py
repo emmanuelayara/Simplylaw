@@ -32,7 +32,7 @@ def register_routes(app):
         page = request.args.get('page', 1, type=int)
         category = request.args.get('category')
         search_query = request.args.get('search', '', type=str)
-        per_page = 5
+        per_page = 8
 
         trending_articles = Article.query.order_by(Article.likes.desc()).limit(3).all()
 
