@@ -1,19 +1,365 @@
 {% extends 'layout.html' %}
+
 {% block content %}
-<div class="container mt-5">
-    <h3 class="mb-4">📩 Contact Messages</h3>
-    {% if messages %}
-        <div class="list-group">
-            {% for msg in messages %}
-                <div class="list-group-item mb-3 shadow-sm">
-                    <h6>{{ msg.name }} <small class="text-muted">({{ msg.email }})</small></h6>
-                    <p class="mb-1">{{ msg.message }}</p>
-                    <small class="text-muted">{{ msg.date_sent.strftime('%B %d, %Y, %I:%M %p') }}</small>
-                </div>
-            {% endfor %}
+<div class="min-vh-100" style="background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);">
+  <div class="container py-5">
+    
+    <!-- Page Header -->
+    <div class="row justify-content-center mb-5">
+      <div class="col-12 col-lg-10">
+        <div class="text-center mb-4">
+          <div class="d-inline-block p-4 rounded-circle mb-3" 
+               style="background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%); box-shadow: 0 8px 25px rgba(33, 150, 243, 0.3);">
+            <i class="fas fa-envelope-open-text text-white" style="font-size: 2.5rem;"></i>
+          </div>
+          <h1 class="display-5 fw-bold text-primary mb-2">Contact Messages</h1>
+          <p class="lead text-muted">Manage and view all incoming messages from your website visitors</p>
         </div>
-    {% else %}
-        <p class="text-muted">No messages yet.</p>
-    {% endif %}
+
+        <!-- Stats Card -->
+        <div class="row justify-content-center">
+          <div class="col-md-6 col-lg-4">
+            <div class="card border-0 shadow-lg" style="border-radius: 20px; background: linear-gradient(135deg, #42a5f5 0%, #64b5f6 100%);">
+              <div class="card-body text-center p-4">
+                <div class="text-white">
+                  <i class="fas fa-messages fs-1 mb-2 opacity-75"></i>
+                  <h3 class="fw-bold mb-1">{{ messages|length if messages else 0 }}</h3>
+                  <p class="mb-0 fw-medium">Total Messages</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Content -->
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10">
+        
+        {% if messages %}
+          <!-- Messages List -->
+          <div class="row">
+            {% for msg in messages %}
+              <div class="col-12 col-lg-6 mb-4">
+                <div class="card border-0 shadow-lg h-100" 
+                     style="border-radius: 20px; transition: all 0.3s ease; background: white;">
+                  
+                  <!-- Message Header -->
+                  <div class="card-header border-0 p-4" 
+                       style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%); border-radius: 20px 20px 0 0;">
+                    <div class="d-flex align-items-start">
+                      <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3 flex-shrink-0">
+                        <i class="fas fa-user text-primary fs-5"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <h5 class="fw-bold text-primary mb-1">{{ msg.name }}</h5>
+                        <p class="text-muted mb-0 small">
+                          <i class="fas fa-envelope me-1"></i>
+                          {{ msg.email }}
+                        </p>
+                      </div>
+                      <div class="text-end">
+                        <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill">
+                          <i class="fas fa-clock me-1"></i>
+                          New
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Message Content -->
+                  <div class="card-body p-4">
+                    <div class="message-content mb-3">
+                      <p class="text-dark mb-0" style="line-height: 1.6; font-size: 0.95rem;">
+                        {{ msg.message }}
+                      </p>
+                    </div>
+                    
+                    <!-- Message Footer -->
+                    <div class="d-flex justify-content-between align-items-center pt-3" 
+                         style="border-top: 1px solid #e3f2fd;">
+                      <small class="text-muted">
+                        <i class="fas fa-calendar-alt me-1"></i>
+                        {{ msg.date_sent.strftime('%B %d, %Y') }}
+                      </small>
+                      <small class="text-muted">
+                        <i class="fas fa-clock me-1"></i>
+                        {{ msg.date_sent.strftime('%I:%M %p') }}
+                      </small>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="card-footer border-0 p-4 pt-0" style="background: white;">
+                    <div class="d-flex gap-2">
+                      <a href="mailto:{{ msg.email }}" 
+                         class="btn btn-primary btn-sm rounded-pill px-4 flex-fill"
+                         style="transition: all 0.3s ease;">
+                        <i class="fas fa-reply me-1"></i>
+                        Reply
+                      </a>
+                      <button class="btn btn-outline-secondary btn-sm rounded-circle" 
+                              style="width: 40px; height: 40px; transition: all 0.3s ease;"
+                              title="Mark as Read">
+                        <i class="fas fa-check"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- Load More Button (if needed) -->
+          {% if messages|length > 6 %}
+            <div class="text-center mt-4">
+              <button class="btn btn-lg px-5 py-3 rounded-pill" 
+                      style="background: linear-gradient(135deg, #42a5f5 0%, #64b5f6 100%); border: none; color: white; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(66, 165, 245, 0.3);">
+                <i class="fas fa-chevron-down me-2"></i>
+                Load More Messages
+              </button>
+            </div>
+          {% endif %}
+
+        {% else %}
+          <!-- Empty State -->
+          <div class="text-center py-5">
+            <div class="card border-0 shadow-lg mx-auto" style="max-width: 500px; border-radius: 25px;">
+              <div class="card-body p-5">
+                <div class="mb-4">
+                  <div class="d-inline-block p-4 rounded-circle bg-light">
+                    <i class="fas fa-inbox text-muted" style="font-size: 3rem;"></i>
+                  </div>
+                </div>
+                <h3 class="text-muted fw-bold mb-3">No Messages Yet</h3>
+                <p class="text-muted mb-4">
+                  You haven't received any contact messages yet. When visitors reach out through your contact form, 
+                  their messages will appear here.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+                  <a href="#" class="btn btn-primary btn-lg px-4 py-3 rounded-pill">
+                    <i class="fas fa-plus me-2"></i>
+                    Add Contact Form
+                  </a>
+                  <a href="#" class="btn btn-outline-primary btn-lg px-4 py-3 rounded-pill">
+                    <i class="fas fa-share-alt me-2"></i>
+                    Share Contact Info
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Custom CSS for enhanced interactions -->
+<style>
+  /* Card hover effects */
+  .card {
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(33, 150, 243, 0.15) !important;
+  }
+
+  /* Button hover effects */
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+  }
+
+  .btn-outline-secondary:hover {
+    transform: scale(1.05);
+  }
+
+  /* Message content styling */
+  .message-content {
+    max-height: 120px;
+    overflow-y: auto;
+    padding-right: 5px;
+  }
+
+  .message-content::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .message-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .message-content::-webkit-scrollbar-thumb {
+    background: #2196f3;
+    border-radius: 10px;
+  }
+
+  /* Animation for new messages */
+  .card {
+    animation: fadeInUp 0.5s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .display-5 {
+      font-size: 2rem !important;
+    }
+    
+    .card-body {
+      padding: 1.5rem !important;
+    }
+    
+    .card-header {
+      padding: 1.5rem !important;
+    }
+    
+    .container {
+      padding-left: 15px !important;
+      padding-right: 15px !important;
+    }
+
+    .col-12.col-lg-6 {
+      margin-bottom: 1.5rem !important;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .d-flex.gap-2 {
+      flex-direction: column;
+    }
+    
+    .flex-fill {
+      width: 100%;
+    }
+    
+    .btn-outline-secondary.rounded-circle {
+      align-self: center;
+      margin-top: 0.5rem;
+    }
+  }
+
+  /* Badge animations */
+  .badge {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus states for accessibility */
+  .btn:focus,
+  .card:focus {
+    outline: 2px solid #2196f3;
+    outline-offset: 2px;
+  }
+</style>
+
+<!-- Enhanced JavaScript for interactions -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add read/unread functionality
+    const markReadButtons = document.querySelectorAll('.btn-outline-secondary[title="Mark as Read"]');
+    
+    markReadButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const card = this.closest('.card');
+        const badge = card.querySelector('.badge');
+        
+        if (badge.textContent.trim() === 'New') {
+          badge.textContent = 'Read';
+          badge.classList.remove('bg-primary', 'bg-opacity-10', 'text-primary');
+          badge.classList.add('bg-success', 'bg-opacity-10', 'text-success');
+          this.innerHTML = '<i class="fas fa-check-double"></i>';
+          this.title = 'Mark as Unread';
+        } else {
+          badge.textContent = 'New';
+          badge.classList.remove('bg-success', 'bg-opacity-10', 'text-success');
+          badge.classList.add('bg-primary', 'bg-opacity-10', 'text-primary');
+          this.innerHTML = '<i class="fas fa-check"></i>';
+          this.title = 'Mark as Read';
+        }
+      });
+    });
+
+    // Add search functionality (if needed)
+    const addSearchBox = () => {
+      const header = document.querySelector('.text-center.mb-4');
+      if (header && document.querySelectorAll('.card').length > 3) {
+        const searchHTML = `
+          <div class="row justify-content-center mt-4">
+            <div class="col-md-6">
+              <div class="input-group input-group-lg">
+                <span class="input-group-text bg-white border-end-0" style="border-radius: 25px 0 0 25px;">
+                  <i class="fas fa-search text-muted"></i>
+                </span>
+                <input type="text" class="form-control border-start-0" 
+                       placeholder="Search messages..." 
+                       style="border-radius: 0 25px 25px 0;">
+              </div>
+            </div>
+          </div>
+        `;
+        header.insertAdjacentHTML('afterend', searchHTML);
+      }
+    };
+
+    addSearchBox();
+
+    // Add smooth reveal animation for cards
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.card').forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+      observer.observe(card);
+    });
+  });
+</script>
+
 {% endblock %}
