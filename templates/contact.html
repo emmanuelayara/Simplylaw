@@ -1,50 +1,454 @@
 {% extends 'layout.html' %}
+
 {% block content %}
-<div class="container d-flex justify-content-center">
-    <div class="w-100" style="max-width: 600px; margin-top: 30px;">
-        <h2 class="text-center mb-4">Contact Us</h2>
-        <form method="POST" class="p-4 shadow-sm rounded bg-light">
-            {{ form.hidden_tag() }}
-            <div class="mb-3">
-                {{ form.name.label(class="form-label") }}
-                {{ form.name(class="form-control") }}
-            </div>
-            <div class="mb-3">
-                {{ form.email.label(class="form-label") }}
-                {{ form.email(class="form-control") }}
-            </div>
-            <div class="mb-3">
-                {{ form.message.label(class="form-label") }}
-                {{ form.message(class="form-control", rows="5") }}
-            </div>
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Send Message</button>
-            </div>
-        </form>
-
-        <!-- Contact Details & Social Media -->
-        <div class="mt-5 p-4 bg-white rounded shadow-sm">
-            <h5 class="mb-3">Get in Touch</h5>
-            <p><strong>Email:</strong> contact@simplylaw.com</p>
-            <p><strong>Phone:</strong> +234 801 234 5678</p>
-            <p><strong>Address:</strong> 25 Legal Avenue, Victoria Island, Lagos, Nigeria</p>
-
-            <h6 class="mt-4">Follow Us</h6>
-            <div class="d-flex gap-3">
-                <a href="https://facebook.com/simplylaw" target="_blank" class="text-decoration-none text-primary">
-                    <i class="fab fa-facebook fa-lg"></i> Facebook
-                </a>
-                <a href="https://twitter.com/simplylaw" target="_blank" class="text-decoration-none text-info">
-                    <i class="fab fa-twitter fa-lg"></i> Twitter
-                </a>
-                <a href="https://www.instagram.com/simplylawverse?igsh=dnR0a21vZ25teW92" target="_blank" class="text-decoration-none text-danger">
-                    <i class="fab fa-instagram fa-lg"></i> Instagram
-                </a>
-                <a href="https://www.linkedin.com/company/simplylaw-com-ng/" target="_blank" class="text-decoration-none text-dark">
-                    <i class="fab fa-linkedin fa-lg"></i> LinkedIn
-                </a>
-            </div>
-        </div>
+<div class="min-vh-100" style="background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);">
+  <div class="container py-5">
+    
+    <!-- Page Header -->
+    <div class="text-center mb-5">
+      <div class="d-inline-block p-4 rounded-circle mb-4" 
+           style="background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%); box-shadow: 0 10px 30px rgba(33, 150, 243, 0.3);">
+        <i class="fas fa-paper-plane text-white" style="font-size: 2.5rem;"></i>
+      </div>
+      <h1 class="display-4 fw-bold text-primary mb-3">Contact Us</h1>
+      <p class="lead text-muted">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
     </div>
+
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10">
+        <div class="row g-4">
+          
+          <!-- Contact Form Section -->
+          <div class="col-12 col-md-7">
+            <div class="card border-0 shadow-lg" style="border-radius: 25px; overflow: hidden;">
+              
+              <!-- Form Header -->
+              <div class="card-header border-0 p-0" style="background: linear-gradient(135deg, #42a5f5 0%, #64b5f6 100%);">
+                <div class="p-4 text-white text-center">
+                  <h3 class="fw-bold mb-2">
+                    <i class="fas fa-envelope-open me-2"></i>
+                    Send us a Message
+                  </h3>
+                  <p class="mb-0 opacity-75">Fill out the form below and we'll get back to you</p>
+                </div>
+              </div>
+
+              <!-- Form Body -->
+              <div class="card-body p-4 p-md-5">
+                <form method="POST" id="contactForm">
+                  {{ form.hidden_tag() }}
+                  
+                  <!-- Name Field -->
+                  <div class="mb-4">
+                    <label class="form-label fw-bold text-dark d-flex align-items-center">
+                      <i class="fas fa-user text-primary me-2"></i>
+                      {{ form.name.label.text }}
+                    </label>
+                    <div class="input-group input-group-lg">
+                      {{ form.name(class="form-control rounded-pill px-4", style="border: 2px solid #e3f2fd; transition: all 0.3s ease;", placeholder="Enter your full name") }}
+                    </div>
+                  </div>
+
+                  <!-- Email Field -->
+                  <div class="mb-4">
+                    <label class="form-label fw-bold text-dark d-flex align-items-center">
+                      <i class="fas fa-envelope text-primary me-2"></i>
+                      {{ form.email.label.text }}
+                    </label>
+                    <div class="input-group input-group-lg">
+                      {{ form.email(class="form-control rounded-pill px-4", style="border: 2px solid #e3f2fd; transition: all 0.3s ease;", placeholder="Enter your email address") }}
+                    </div>
+                  </div>
+
+                  <!-- Message Field -->
+                  <div class="mb-4">
+                    <label class="form-label fw-bold text-dark d-flex align-items-center">
+                      <i class="fas fa-comment-dots text-primary me-2"></i>
+                      {{ form.message.label.text }}
+                    </label>
+                    {{ form.message(class="form-control rounded-4 px-4 py-3", rows="6", style="border: 2px solid #e3f2fd; transition: all 0.3s ease; resize: vertical;", placeholder="Tell us how we can help you...") }}
+                  </div>
+
+                  <!-- Submit Button -->
+                  <div class="d-grid">
+                    <button type="submit" class="btn btn-lg py-3 fw-bold rounded-pill" 
+                            style="background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%); border: none; color: white; transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(76, 175, 80, 0.3);">
+                      <i class="fas fa-paper-plane me-2"></i>
+                      Send Message
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contact Information Section -->
+          <div class="col-12 col-md-5">
+            
+            <!-- Contact Details Card -->
+            <div class="card border-0 shadow-lg mb-4" style="border-radius: 25px; background: white;">
+              <div class="card-body p-4">
+                <h4 class="fw-bold text-primary mb-4">
+                  <i class="fas fa-address-book me-2"></i>
+                  Get in Touch
+                </h4>
+                
+                <!-- Email -->
+                <div class="d-flex align-items-center mb-3 p-3 rounded-4" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 10%);">
+                  <div class="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                    <i class="fas fa-envelope text-primary"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold mb-1 text-dark">Email</h6>
+                    <a href="mailto:contact@simplylaw.com" class="text-primary text-decoration-none">
+                      contact@simplylaw.com
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="d-flex align-items-center mb-3 p-3 rounded-4" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 10%);">
+                  <div class="bg-success bg-opacity-10 rounded-circle p-3 me-3">
+                    <i class="fas fa-phone text-success"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold mb-1 text-dark">Phone</h6>
+                    <a href="tel:+2348012345678" class="text-success text-decoration-none">
+                      +234 801 234 5678
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Address -->
+                <div class="d-flex align-items-start mb-3 p-3 rounded-4" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 10%);">
+                  <div class="bg-warning bg-opacity-10 rounded-circle p-3 me-3">
+                    <i class="fas fa-map-marker-alt text-warning"></i>
+                  </div>
+                  <div>
+                    <h6 class="fw-bold mb-1 text-dark">Address</h6>
+                    <p class="text-muted mb-0 small">25 Legal Avenue, Victoria Island<br>Lagos, Nigeria</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Social Media Card -->
+            <div class="card border-0 shadow-lg" style="border-radius: 25px; background: white;">
+              <div class="card-body p-4">
+                <h5 class="fw-bold text-primary mb-4">
+                  <i class="fas fa-share-alt me-2"></i>
+                  Follow Us
+                </h5>
+                
+                <div class="row g-3">
+                  <!-- Facebook -->
+                  <div class="col-6">
+                    <a href="https://facebook.com/simplylaw" target="_blank" 
+                       class="btn btn-outline-primary w-100 rounded-pill py-3 social-btn"
+                       style="border: 2px solid #1877f2; transition: all 0.3s ease;">
+                      <i class="fab fa-facebook fs-4 mb-1"></i>
+                      <div class="small fw-medium">Facebook</div>
+                    </a>
+                  </div>
+
+                  <!-- Twitter -->
+                  <div class="col-6">
+                    <a href="https://twitter.com/simplylaw" target="_blank" 
+                       class="btn btn-outline-info w-100 rounded-pill py-3 social-btn"
+                       style="border: 2px solid #1da1f2; transition: all 0.3s ease;">
+                      <i class="fab fa-twitter fs-4 mb-1"></i>
+                      <div class="small fw-medium">Twitter</div>
+                    </a>
+                  </div>
+
+                  <!-- Instagram -->
+                  <div class="col-6">
+                    <a href="https://www.instagram.com/simplylawverse?igsh=dnR0a21vZ25teW92" target="_blank" 
+                       class="btn btn-outline-danger w-100 rounded-pill py-3 social-btn"
+                       style="border: 2px solid #e4405f; transition: all 0.3s ease;">
+                      <i class="fab fa-instagram fs-4 mb-1"></i>
+                      <div class="small fw-medium">Instagram</div>
+                    </a>
+                  </div>
+
+                  <!-- LinkedIn -->
+                  <div class="col-6">
+                    <a href="https://www.linkedin.com/company/simplylaw-com-ng/" target="_blank" 
+                       class="btn btn-outline-dark w-100 rounded-pill py-3 social-btn"
+                       style="border: 2px solid #0077b5; transition: all 0.3s ease;">
+                      <i class="fab fa-linkedin fs-4 mb-1"></i>
+                      <div class="small fw-medium">LinkedIn</div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Features Section -->
+        <div class="row mt-5">
+          <div class="col-12">
+            <div class="card border-0 shadow-lg" style="border-radius: 25px; background: linear-gradient(135deg, #f0f8ff 0%, #e1f5fe 100%);">
+              <div class="card-body p-4 p-md-5 text-center">
+                <h4 class="fw-bold text-primary mb-3">Why Choose SimplyLaw?</h4>
+                <div class="row g-4">
+                  <div class="col-12 col-md-4">
+                    <div class="p-3">
+                      <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+                        <i class="fas fa-clock text-primary fs-3"></i>
+                      </div>
+                      <h6 class="fw-bold text-dark">Quick Response</h6>
+                      <p class="text-muted small mb-0">We respond to all inquiries within 24 hours</p>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-4">
+                    <div class="p-3">
+                      <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+                        <i class="fas fa-shield-alt text-success fs-3"></i>
+                      </div>
+                      <h6 class="fw-bold text-dark">Trusted Service</h6>
+                      <p class="text-muted small mb-0">Reliable legal advice you can count on</p>
+                    </div>
+                  </div>
+                  <div class="col-12 col-md-4">
+                    <div class="p-3">
+                      <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+                        <i class="fas fa-users text-warning fs-3"></i>
+                      </div>
+                      <h6 class="fw-bold text-dark">Expert Team</h6>
+                      <p class="text-muted small mb-0">Professional lawyers with years of experience</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!-- Custom CSS for enhanced interactions -->
+<style>
+  /* Form focus states */
+  .form-control:focus {
+    border-color: #2196f3 !important;
+    box-shadow: 0 0 0 0.25rem rgba(33, 150, 243, 0.25) !important;
+    transform: translateY(-1px);
+  }
+
+  /* Button hover effects */
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .social-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+
+  /* Social button specific hover colors */
+  .social-btn[href*="facebook"]:hover {
+    background-color: #1877f2;
+    color: white !important;
+  }
+
+  .social-btn[href*="twitter"]:hover {
+    background-color: #1da1f2;
+    color: white !important;
+  }
+
+  .social-btn[href*="instagram"]:hover {
+    background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+    color: white !important;
+    border-color: transparent !important;
+  }
+
+  .social-btn[href*="linkedin"]:hover {
+    background-color: #0077b5;
+    color: white !important;
+  }
+
+  /* Card hover effects */
+  .card {
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+  }
+
+  /* Animation for form submission */
+  .btn[type="submit"]:hover {
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4);
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .display-4 {
+      font-size: 2.2rem !important;
+    }
+    
+    .card-body {
+      padding: 1.5rem !important;
+    }
+    
+    .input-group-lg .form-control {
+      font-size: 1rem;
+    }
+    
+    .social-btn {
+      padding: 0.75rem !important;
+    }
+    
+    .social-btn .fs-4 {
+      font-size: 1.2rem !important;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .container {
+      padding-left: 15px !important;
+      padding-right: 15px !important;
+    }
+    
+    .col-6 {
+      margin-bottom: 0.5rem;
+    }
+    
+    .lead {
+      font-size: 1.1rem;
+    }
+  }
+
+  /* Loading animation for form submission */
+  .btn-loading {
+    position: relative;
+    color: transparent !important;
+  }
+
+  .btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Smooth reveal animations */
+  .card {
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<!-- Enhanced JavaScript for form interactions -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contactForm');
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+
+    // Form validation enhancement
+    const inputs = form.querySelectorAll('input, textarea');
+    
+    inputs.forEach(input => {
+      input.addEventListener('blur', function() {
+        if (this.value.trim()) {
+          this.classList.add('is-valid');
+          this.classList.remove('is-invalid');
+        }
+      });
+
+      input.addEventListener('focus', function() {
+        this.classList.remove('is-invalid');
+      });
+    });
+
+    // Form submission with loading state
+    form.addEventListener('submit', function(e) {
+      submitBtn.classList.add('btn-loading');
+      submitBtn.disabled = true;
+      
+      // Reset after 3 seconds if no redirect occurs
+      setTimeout(() => {
+        submitBtn.classList.remove('btn-loading');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-check me-2"></i>Message Sent!';
+        
+        setTimeout(() => {
+          submitBtn.innerHTML = originalBtnText;
+        }, 2000);
+      }, 1000);
+    });
+
+    // Add floating label effect
+    inputs.forEach(input => {
+      const parent = input.closest('.mb-4');
+      const label = parent.querySelector('label');
+      
+      if (input.value) {
+        label.style.transform = 'translateY(-10px) scale(0.9)';
+        label.style.color = '#2196f3';
+      }
+
+      input.addEventListener('focus', function() {
+        label.style.transform = 'translateY(-10px) scale(0.9)';
+        label.style.color = '#2196f3';
+        label.style.transition = 'all 0.3s ease';
+      });
+
+      input.addEventListener('blur', function() {
+        if (!this.value) {
+          label.style.transform = 'translateY(0) scale(1)';
+          label.style.color = '#6c757d';
+        }
+      });
+    });
+
+    // Add success message animation
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('success') === 'true') {
+      const successAlert = document.createElement('div');
+      successAlert.className = 'alert alert-success alert-dismissible fade show position-fixed';
+      successAlert.style.cssText = 'top: 20px; right: 20px; z-index: 1050; border-radius: 15px;';
+      successAlert.innerHTML = `
+        <i class="fas fa-check-circle me-2"></i>
+        <strong>Success!</strong> Your message has been sent successfully.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      `;
+      document.body.appendChild(successAlert);
+
+      setTimeout(() => {
+        successAlert.remove();
+      }, 5000);
+    }
+  });
+</script>
+
 {% endblock %}
