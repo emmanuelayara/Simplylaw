@@ -1,148 +1,570 @@
 {% extends 'layout.html' %}
 
 {% block content %}
-<div class="container mt-4">
-  <h1 class="mb-5 text-center">Admin Dashboard</h1>
-
-  <!-- Welcome Message -->
-  <div class="alert alert-info text-center">
-    Welcome, {{ current_user.username }} ({{ current_user.email }})
-  </div>
-
-  <div class="row">
-    <!-- Pending Articles - LEFT -->
-    <div class="col-md-7">
-      <h3 class="mb-3 text-primary">Pending Articles</h3>
-      {% if articles %}
-        {% for article in articles %}
-          <div class="card mb-3 shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <div>
-                <strong>
-                  <a href="{{ url_for('view_article', article_id=article.id) }}">{{ article.title }}</a>
-                </strong><br>
-                <small>by {{ article.author }}</small>
+<div class="min-vh-100" style="background: linear-gradient(135deg, #f8fbff 0%, #e3f2fd 100%);">
+  <div class="container-fluid py-4 px-3 px-md-4">
+    
+    <!-- Dashboard Header -->
+    <div class="row mb-5">
+      <div class="col-12">
+        <div class="card border-0 shadow-lg" style="border-radius: 25px; background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);">
+          <div class="card-body p-4 p-md-5 text-white">
+            <div class="row align-items-center">
+              <div class="col-12 col-md-8">
+                <div class="d-flex align-items-center mb-3 mb-md-0">
+                  <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                    <i class="fas fa-tachometer-alt fs-2"></i>
+                  </div>
+                  <div>
+                    <h1 class="display-5 fw-bold mb-1">Admin Dashboard</h1>
+                    <p class="mb-0 opacity-75">Manage your content and track performance</p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <a href="{{ url_for('approve_article', article_id=article.id) }}" class="btn btn-sm btn-success">Approve</a>
-                <a href="{{ url_for('disapprove_article', article_id=article.id) }}" class="btn btn-sm btn-danger">Disapprove</a>
-              </div>
-            </div>
-            <div class="card-body">
-              {{ article.content[:250] }}...
-              <div class="mt-2">
-                <a href="{{ url_for('view_article', article_id=article.id) }}" class="btn btn-sm btn-outline-primary">Read Full Article</a>
+              <div class="col-12 col-md-4 text-md-end">
+                <div class="bg-white bg-opacity-10 rounded-4 p-3">
+                  <h6 class="fw-bold mb-1">Welcome back!</h6>
+                  <p class="mb-1">{{ current_user.username }}</p>
+                </div>
               </div>
             </div>
           </div>
-        {% endfor %}
-      {% else %}
-        <p class="text-muted">No pending articles.</p>
-      {% endif %}
-
-      <!-- Pagination -->
-      <nav aria-label="Pending articles pagination">
-        <ul class="pagination justify-content-center">
-          {% if articles.has_prev %}
-            <li class="page-item">
-              <a class="page-link" href="{{ url_for('admin_dashboard', pending_page=articles.prev_num, approved_page=approved_articles.page) }}">«</a>
-            </li>
-          {% else %}
-            <li class="page-item disabled"><span class="page-link">«</span></li>
-          {% endif %}
-          {% for page_num in range(1, articles.pages + 1) %}
-            <li class="page-item {% if articles.page == page_num %}active{% endif %}">
-              <a class="page-link" href="{{ url_for('admin_dashboard', pending_page=page_num, approved_page=approved_articles.page) }}">{{ page_num }}</a>
-            </li>
-          {% endfor %}
-          {% if articles.has_next %}
-            <li class="page-item">
-              <a class="page-link" href="{{ url_for('admin_dashboard', pending_page=articles.next_num, approved_page=approved_articles.page) }}">»</a>
-            </li>
-          {% else %}
-            <li class="page-item disabled"><span class="page-link">»</span></li>
-          {% endif %}
-        </ul>
-      </nav>
+        </div>
+      </div>
     </div>
 
-    <!-- Analytics - RIGHT -->
-    <div class="col-md-5">
-      <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-          <h6 class="mb-0">📊 Analytics</h6>
+    <!-- Analytics Cards Row -->
+    <div class="row g-4 mb-5">
+      <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-lg h-100" style="border-radius: 20px;">
+          <div class="card-body text-center p-4">
+            <div class="bg-primary bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+              <i class="fas fa-newspaper text-primary fs-3"></i>
+            </div>
+            <h3 class="fw-bold text-primary mb-1">{{ total_articles }}</h3>
+            <p class="text-muted small mb-0">Total Articles</p>
+          </div>
         </div>
-        <div class="card-body">
-          <p><strong>Total Articles:</strong> {{ total_articles }}</p>
-          <p><strong>Total Visitors:</strong> {{ total_visits }}</p>
-          <p><strong>Today:</strong> {{ daily_visits }}</p>
-          <p><strong>This Week:</strong> {{ weekly_visits }}</p>
-          <p><strong>This Month:</strong> {{ monthly_visits }}</p>
-          <p><strong>This Year:</strong> {{ yearly_visits }}</p>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-lg h-100" style="border-radius: 20px;">
+          <div class="card-body text-center p-4">
+            <div class="bg-success bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+              <i class="fas fa-users text-success fs-3"></i>
+            </div>
+            <h3 class="fw-bold text-success mb-1">{{ total_visits }}</h3>
+            <p class="text-muted small mb-0">Total Visitors</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-lg h-100" style="border-radius: 20px;">
+          <div class="card-body text-center p-4">
+            <div class="bg-warning bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+              <i class="fas fa-calendar-day text-warning fs-3"></i>
+            </div>
+            <h3 class="fw-bold text-warning mb-1">{{ daily_visits }}</h3>
+            <p class="text-muted small mb-0">Today</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-lg h-100" style="border-radius: 20px;">
+          <div class="card-body text-center p-4">
+            <div class="bg-info bg-opacity-10 rounded-circle p-3 d-inline-block mb-3">
+              <i class="fas fa-chart-line text-info fs-3"></i>
+            </div>
+            <h3 class="fw-bold text-info mb-1">{{ monthly_visits }}</h3>
+            <p class="text-muted small mb-0">This Month</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
-          <hr>
-          <h6 class="mt-3">📖 Readers per Article:</h6>
-          <ul class="list-group mb-3">
-            {% for title, count in readers_per_article %}
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                {{ title }}
-                <span class="badge bg-secondary">{{ count }}</span>
-              </li>
-            {% endfor %}
-          </ul>
+    <!-- Main Content Row -->
+    <div class="row g-4">
+      
+      <!-- Pending Articles Section -->
+      <div class="col-12 col-lg-8">
+        <div class="card border-0 shadow-lg" style="border-radius: 25px;">
+          <div class="card-header border-0 p-4" style="background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%); border-radius: 25px 25px 0 0;">
+            <h4 class="fw-bold text-white mb-0">
+              <i class="fas fa-clock me-2"></i>
+              Pending Articles
+            </h4>
+          </div>
+          <div class="card-body p-4">
+            {% if articles %}
+              <div class="row g-3">
+                {% for article in articles %}
+                  <div class="col-12">
+                    <div class="card border-0 shadow-sm" style="border-radius: 15px; border-left: 4px solid #ff9800;">
+                      <div class="card-body p-4">
+                        <div class="row align-items-center">
+                          <div class="col-12 col-md-8 mb-3 mb-md-0">
+                            <h5 class="fw-bold text-dark mb-2">
+                              <a href="{{ url_for('view_article', article_id=article.id) }}" 
+                                 class="text-decoration-none text-primary">
+                                {{ article.title }}
+                              </a>
+                            </h5>
+                            <p class="text-muted mb-2">
+                              <i class="fas fa-user me-1"></i>
+                              by <span class="fw-medium">{{ article.author }}</span>
+                            </p>
+                            <p class="text-dark mb-3" style="line-height: 1.6;">
+                              {{ article.content[:200] }}{% if article.content|length > 200 %}...{% endif %}
+                            </p>
+                            <a href="{{ url_for('view_article', article_id=article.id) }}" 
+                               class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                              <i class="fas fa-eye me-1"></i>
+                              Read Full Article
+                            </a>
+                          </div>
+                          <div class="col-12 col-md-4 text-md-end">
+                            <div class="d-flex flex-column flex-md-column gap-2">
+                              <a href="{{ url_for('approve_article', article_id=article.id) }}" 
+                                 class="btn btn-success rounded-pill px-4 action-btn">
+                                <i class="fas fa-check me-1"></i>
+                                Approve
+                              </a>
+                              <a href="{{ url_for('disapprove_article', article_id=article.id) }}" 
+                                 class="btn btn-danger rounded-pill px-4 action-btn">
+                                <i class="fas fa-times me-1"></i>
+                                Disapprove
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <!-- Pagination for Pending Articles -->
+              <nav aria-label="Pending articles pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                  {% if articles.has_prev %}
+                    <li class="page-item">
+                      <a class="page-link rounded-pill me-1" 
+                         href="{{ url_for('admin_dashboard', pending_page=articles.prev_num, approved_page=approved_articles.page) }}">
+                        <i class="fas fa-chevron-left"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+                  {% for page_num in range(1, articles.pages + 1) %}
+                    <li class="page-item {% if articles.page == page_num %}active{% endif %}">
+                      <a class="page-link rounded-pill mx-1" 
+                         href="{{ url_for('admin_dashboard', pending_page=page_num, approved_page=approved_articles.page) }}">
+                        {{ page_num }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                  {% if articles.has_next %}
+                    <li class="page-item">
+                      <a class="page-link rounded-pill ms-1" 
+                         href="{{ url_for('admin_dashboard', pending_page=articles.next_num, approved_page=approved_articles.page) }}">
+                        <i class="fas fa-chevron-right"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% else %}
+              <div class="text-center py-5">
+                <div class="bg-light rounded-circle p-4 d-inline-block mb-3">
+                  <i class="fas fa-inbox text-muted" style="font-size: 3rem;"></i>
+                </div>
+                <h5 class="text-muted">No pending articles</h5>
+                <p class="text-muted">All articles have been reviewed</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Sidebar -->
+      <div class="col-12 col-lg-4">
+        
+        <!-- Detailed Analytics Card -->
+        <div class="card border-0 shadow-lg mb-4" style="border-radius: 25px;">
+          <div class="card-header border-0 p-4" style="background: linear-gradient(135deg, #42a5f5 0%, #64b5f6 100%); border-radius: 25px 25px 0 0;">
+            <h5 class="fw-bold text-white mb-0">
+              <i class="fas fa-chart-bar me-2"></i>
+              Detailed Analytics
+            </h5>
+          </div>
+          <div class="card-body p-4">
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="text-center p-3 rounded-3" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 10%);">
+                  <h6 class="fw-bold text-success mb-1">{{ weekly_visits }}</h6>
+                  <small class="text-muted">This Week</small>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="text-center p-3 rounded-3" style="background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 10%);">
+                  <h6 class="fw-bold text-primary mb-1">{{ yearly_visits }}</h6>
+                  <small class="text-muted">This Year</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Popular Articles Card -->
+        <div class="card border-0 shadow-lg" style="border-radius: 25px;">
+          <div class="card-header border-0 p-4" style="background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%); border-radius: 25px 25px 0 0;">
+            <h5 class="fw-bold text-white mb-0">
+              <i class="fas fa-fire me-2"></i>
+              Popular Articles
+            </h5>
+          </div>
+          <div class="card-body p-4">
+            {% if readers_per_article %}
+              <div class="list-group list-group-flush">
+                {% for title, count in readers_per_article %}
+                  <div class="list-group-item border-0 px-0 py-3" style="background: transparent;">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div class="flex-grow-1 me-2">
+                        <h6 class="fw-medium text-dark mb-1" style="font-size: 0.9rem; line-height: 1.4;">
+                          {{ title[:50] }}{% if title|length > 50 %}...{% endif %}
+                        </h6>
+                      </div>
+                      <div class="flex-shrink-0">
+                        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2">
+                          {{ count }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="text-center py-3">
+                <p class="text-muted mb-0">No data available yet</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Approved Articles Section -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="card border-0 shadow-lg" style="border-radius: 25px;">
+          <div class="card-header border-0 p-4" style="background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%); border-radius: 25px 25px 0 0;">
+            <h4 class="fw-bold text-white mb-0">
+              <i class="fas fa-check-circle me-2"></i>
+              Approved Articles
+            </h4>
+          </div>
+          <div class="card-body p-4">
+            {% if approved_articles %}
+              <div class="row g-3">
+                {% for article in approved_articles %}
+                  <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card border-0 shadow-sm h-100" style="border-radius: 15px; border-left: 4px solid #4caf50;">
+                      <div class="card-body p-4">
+                        <div class="d-flex align-items-start mb-3">
+                          <div class="bg-success bg-opacity-10 rounded-circle p-2 me-2 flex-shrink-0">
+                            <i class="fas fa-check text-success"></i>
+                          </div>
+                          <div class="flex-grow-1">
+                            <h6 class="fw-bold text-dark mb-1">{{ article.title }}</h6>
+                            <small class="text-muted">by {{ article.author }}</small>
+                          </div>
+                        </div>
+                        
+                        <p class="text-dark mb-3 small" style="line-height: 1.5;">
+                          {{ article.content[:150] }}{% if article.content|length > 150 %}...{% endif %}
+                        </p>
+                        
+                        <div class="d-flex flex-column gap-2">
+                          <a href="{{ url_for('view_article', article_id=article.id) }}" 
+                             class="btn btn-sm btn-outline-primary rounded-pill">
+                            <i class="fas fa-eye me-1"></i>
+                            Read Article
+                          </a>
+                          <a href="{{ url_for('disapprove_article', article_id=article.id) }}" 
+                             class="btn btn-sm btn-outline-danger rounded-pill delete-btn">
+                            <i class="fas fa-trash me-1"></i>
+                            Delete
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <!-- Pagination for Approved Articles -->
+              <nav aria-label="Approved articles pagination" class="mt-4">
+                <ul class="pagination justify-content-center">
+                  {% if approved_articles.has_prev %}
+                    <li class="page-item">
+                      <a class="page-link rounded-pill me-1" 
+                         href="{{ url_for('admin_dashboard', approved_page=approved_articles.prev_num, pending_page=articles.page) }}">
+                        <i class="fas fa-chevron-left"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+                  {% for page_num in range(1, approved_articles.pages + 1) %}
+                    <li class="page-item {% if approved_articles.page == page_num %}active{% endif %}">
+                      <a class="page-link rounded-pill mx-1" 
+                         href="{{ url_for('admin_dashboard', approved_page=page_num, pending_page=articles.page) }}">
+                        {{ page_num }}
+                      </a>
+                    </li>
+                  {% endfor %}
+                  {% if approved_articles.has_next %}
+                    <li class="page-item">
+                      <a class="page-link rounded-pill ms-1" 
+                         href="{{ url_for('admin_dashboard', approved_page=approved_articles.next_num, pending_page=articles.page) }}">
+                        <i class="fas fa-chevron-right"></i>
+                      </a>
+                    </li>
+                  {% endif %}
+                </ul>
+              </nav>
+            {% else %}
+              <div class="text-center py-5">
+                <div class="bg-light rounded-circle p-4 d-inline-block mb-3">
+                  <i class="fas fa-newspaper text-muted" style="font-size: 3rem;"></i>
+                </div>
+                <h5 class="text-muted">No approved articles yet</h5>
+                <p class="text-muted">Start by approving some pending articles</p>
+              </div>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Approved Articles -->
-  <div class="mt-5">
-    <h3 class="mb-3 text-success">Approved Articles</h3>
-    {% if approved_articles %}
-      {% for article in approved_articles %}
-        <div class="card mb-3 shadow-sm border-success">
-          <div class="card-header bg-success text-white">
-            {{ article.title }} by {{ article.author }}
-          </div>
-          <div class="card-body">
-            {{ article.content[:250] }}...
-            <div class="mt-2">
-              <a href="{{ url_for('view_article', article_id=article.id) }}" class="btn btn-sm btn-outline-primary">Read Full Article</a>
-            </div>
-            <div>
-              <a href="{{ url_for('disapprove_article', article_id=article.id) }}" class="btn btn-sm btn-danger">Delete</a>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    {% else %}
-      <p class="text-muted">No approved articles yet.</p>
-    {% endif %}
-
-    <!-- Pagination -->
-    <nav aria-label="Approved articles pagination">
-      <ul class="pagination justify-content-center">
-        {% if approved_articles.has_prev %}
-          <li class="page-item">
-            <a class="page-link" href="{{ url_for('admin_dashboard', approved_page=approved_articles.prev_num, pending_page=articles.page) }}">«</a>
-          </li>
-        {% else %}
-          <li class="page-item disabled"><span class="page-link">«</span></li>
-        {% endif %}
-        {% for page_num in range(1, approved_articles.pages + 1) %}
-          <li class="page-item {% if approved_articles.page == page_num %}active{% endif %}">
-            <a class="page-link" href="{{ url_for('admin_dashboard', approved_page=page_num, pending_page=articles.page) }}">{{ page_num }}</a>
-          </li>
-        {% endfor %}
-        {% if approved_articles.has_next %}
-          <li class="page-item">
-            <a class="page-link" href="{{ url_for('admin_dashboard', approved_page=approved_articles.next_num, pending_page=articles.page) }}">»</a>
-          </li>
-        {% else %}
-          <li class="page-item disabled"><span class="page-link">»</span></li>
-        {% endif %}
-      </ul>
-    </nav>
-  </div>
 </div>
+
+<!-- Custom CSS for enhanced interactions -->
+<style>
+  /* Card hover effects */
+  .card {
+    transition: all 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: translateY(-3px);
+  }
+
+  /* Button hover effects */
+  .action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+
+  .delete-btn:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+  }
+
+  /* Page link styling */
+  .page-link {
+    border: none;
+    background: white;
+    color: #2196f3;
+    margin: 0 2px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+  }
+
+  .page-link:hover {
+    background: #2196f3;
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  .page-item.active .page-link {
+    background: linear-gradient(135deg, #2196f3 0%, #42a5f5 100%);
+    border-color: #2196f3;
+  }
+
+  /* Analytics cards animation */
+  .col-6.col-md-3:nth-child(1) .card { animation-delay: 0.1s; }
+  .col-6.col-md-3:nth-child(2) .card { animation-delay: 0.2s; }
+  .col-6.col-md-3:nth-child(3) .card { animation-delay: 0.3s; }
+  .col-6.col-md-3:nth-child(4) .card { animation-delay: 0.4s; }
+
+  /* Smooth animations */
+  .card {
+    animation: fadeInUp 0.6s ease-out backwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Mobile responsiveness */
+  @media (max-width: 768px) {
+    .display-5 {
+      font-size: 2rem !important;
+    }
+    
+    .container-fluid {
+      padding-left: 15px !important;
+      padding-right: 15px !important;
+    }
+    
+    .card-body {
+      padding: 1.5rem !important;
+    }
+    
+    .d-flex.flex-column.flex-md-column {
+      flex-direction: row !important;
+    }
+    
+    .action-btn {
+      flex: 1;
+    }
+
+    /* Stack analytics cards properly on mobile */
+    .col-6.col-md-3 {
+      margin-bottom: 1rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .card-header h1,
+    .card-header h4,
+    .card-header h5 {
+      font-size: 1.1rem !important;
+    }
+    
+    .fs-2 {
+      font-size: 1.5rem !important;
+    }
+    
+    .fs-3 {
+      font-size: 1.2rem !important;
+    }
+
+    /* Better mobile spacing for action buttons */
+    .d-flex.flex-column.gap-2 {
+      gap: 0.5rem !important;
+    }
+  }
+
+  /* Loading states */
+  .btn.loading {
+    position: relative;
+    color: transparent !important;
+  }
+
+  .btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* Improve text readability */
+  .text-dark {
+    color: #2c3e50 !important;
+  }
+
+  /* Custom scrollbar for overflow content */
+  .card-body::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .card-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  .card-body::-webkit-scrollbar-thumb {
+    background: #2196f3;
+    border-radius: 10px;
+  }
+</style>
+
+<!-- Enhanced JavaScript for interactions -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add loading states to action buttons
+    const actionButtons = document.querySelectorAll('.action-btn');
+    
+    actionButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        this.classList.add('loading');
+        this.disabled = true;
+      });
+    });
+
+    // Confirm delete actions
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    
+    deleteButtons.forEach(button => {
+      button.addEventListener('click', function(e) {
+        if (!confirm('Are you sure you want to delete this article? This action cannot be undone.')) {
+          e.preventDefault();
+        } else {
+          this.classList.add('loading');
+          this.disabled = true;
+        }
+      });
+    });
+
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Auto-refresh analytics every 5 minutes
+    setInterval(() => {
+      const analyticsCards = document.querySelectorAll('.col-6.col-md-3 .card');
+      analyticsCards.forEach(card => {
+        card.style.animation = 'pulse 0.5s ease-in-out';
+      });
+    }, 300000); // 5 minutes
+  });
+
+  // Add pulse animation for updated data
+  const pulseKeyframes = `
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+  `;
+  
+  const style = document.createElement('style');
+  style.textContent = pulseKeyframes;
+  document.head.appendChild(style);
+</script>
+
 {% endblock %}
