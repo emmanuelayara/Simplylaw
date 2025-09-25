@@ -472,53 +472,13 @@
     </form>
   </div>
 
-  <!-- Trending Section -->
-  {% if trending_articles %}
-  <div class="trending-section">
-    <h2 class="section-title">
-      <i class="fas fa-fire text-warning me-2"></i>Trending Topics
-    </h2>
-    
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-      {% for article in trending_articles %}
-      <div class="col">
-        <div class="trending-card">
-          <div class="trending-card-body">
-            <h5 class="trending-title">
-              <a href="{{ url_for('view_article', article_id=article.id) }}">
-                {{ article.title }}
-              </a>
-            </h5>
-            <div class="trending-meta">
-              <span>
-                <i class="fas fa-user"></i> {{ article.author }}
-              </span>
-              <span>
-                <i class="fas fa-heart text-danger"></i> {{ article.likes or 0 }} Likes
-              </span>
-            </div>
-            <p class="trending-content">
-              {{ article.content[:120] }}...
-            </p>
-          </div>
-          <div class="trending-footer">
-            <a href="{{ url_for('view_article', article_id=article.id) }}" class="read-more-btn">
-              Read More <i class="fas fa-arrow-right ms-1"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endif %}
-</div>
+
 
 <!-- Articles Section -->
 <div class="articles-section">
   <div class="container">
     {% if articles %}
-      <h2 class="section-title" style="color: white;">
+      <h2 class="section-title" style="color: #2563eb;">
         <i class="fas fa-newspaper me-2"></i>Latest Articles
       </h2>
       
